@@ -1,9 +1,8 @@
-ENTRY(__serialhello)
+ENTRY(main)
 SECTIONS
 {
     . = 0x82000000;
     .text : {
-        *(.serialhello)
         *(.text)
     }
 

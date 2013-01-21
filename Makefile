@@ -1,20 +1,20 @@
 ARMGNU_PREFIX=arm-none-eabi
-CPP_ARGS=-I.
+CPP_ARGS=-Wall -Werror -O2 -I. -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables -ffunction-sections -fdata-sections -nostartfiles -ffreestanding
 CPP_CMD=$(ARMGNU_PREFIX)-g++ $(CPP_ARGS)
 
 all: boot.bin
 
-kernel/main.o: kernel/main.cpp
-	$(CPP_CMD) kernel/main.cpp -c -o kernel/main.o
+kernel/start.o: kernel/start.cpp
+	$(CPP_CMD) kernel/start.cpp -c -o kernel/start.o
 
 kernel/boot/irq.o: kernel/boot/irq.cpp
 	$(CPP_CMD) kernel/boot/irq.cpp -c -o kernel/boot/irq.o
 
-kernel/boot/boot.o: kernel/boot/boot.s
-	$(ARMGNU_PREFIX)-as kernel/boot/boot.s -o kernel/boot/boot.o
+kernel/boot/startup.o: kernel/boot/startup.cpp
+	$(CPP_CMD) kernel/boot/startup.cpp -c -o kernel/boot/startup.o
 
-boot.bin: kernel/boot/irq.o kernel/boot/boot.o kernel/main.o
-	$(ARMGNU_PREFIX)-ld -T kernel/boot/linker.ld kernel/boot/irq.o kernel/boot/boot.o kernel/main.o -o boot.elf
+boot.bin: kernel/boot/irq.o kernel/boot/startup.o kernel/start.o
+	$(ARMGNU_PREFIX)-ld -nostartfiles -T kernel/boot/linker.ld kernel/boot/irq.o kernel/boot/startup.o kernel/start.o -o boot.elf
 	$(ARMGNU_PREFIX)-objcopy boot.elf -O srec boot.srec
 	$(ARMGNU_PREFIX)-objcopy boot.elf -O binary boot.bin
 
