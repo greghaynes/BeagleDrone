@@ -11,4 +11,6 @@
 #define INTC_THRESHOLD                      0x48200068
 #define INTC_THRESHOLD_PRIORITYTHRESHOLD    0xFFu
 
+#define INTC_IRQ_PRIORITY                   0x48200060
+
 #endif
