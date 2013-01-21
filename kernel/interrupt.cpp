@@ -1,5 +1,6 @@
 #include "kernel/interrupt.h"
 #include "kernel/hw/intc.h"
+#include "kernel/sysdefs.h"
 
 #define INTERRUPT_CNT (128u)
 
@@ -10,7 +11,7 @@ void interrupt_default_handler(void) {
 }
 
 void interrupt_init(void) {
-    int i;
+    unsigned int i;
 
     // Reset intc
     REGP(INTC_SYSCONFIG) = INTC_SYSCONFIG_SOFTRESET;
@@ -26,7 +27,7 @@ void interrupt_init(void) {
         interrupt_handlers[i] = interrupt_default_handler;
 }
 
-void interrupt_get_handler(int ndx) {
+interrupt_handler interrupt_get_handler(int ndx) {
     return interrupt_handlers[ndx];
 }
 
