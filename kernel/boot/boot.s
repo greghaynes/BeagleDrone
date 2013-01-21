@@ -1,9 +1,9 @@
-.section .kernel, "ax"
-.global __kernel
+.section .serialhello, "ax"
+.global __serialhello
 .global __main
 .code 32
         
-__kernel:
+__serialhello:
    ldr r0,=0x44e09000
    ldr r1,=0x21
    strb r1,[r0]
