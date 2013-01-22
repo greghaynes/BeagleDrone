@@ -1,6 +1,8 @@
 #ifndef INTERRUPT_H
 #define INTERRUPT_H
 
+#define INTERRUPT_CNT (128u)
+
 typedef void (*interrupt_handler)(void);
 
 void interrupt_init(void);

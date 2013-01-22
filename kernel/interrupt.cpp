@@ -2,9 +2,8 @@
 #include "kernel/hw/intc.h"
 #include "kernel/sysdefs.h"
 
-#define INTERRUPT_CNT (128u)
-
-void (*interrupt_handlers[INTERRUPT_CNT])(void);
+extern "C" void (*volatile interruptHandlers[INTERRUPT_CNT])(void);
+void (*volatile interruptHandlers[INTERRUPT_CNT])(void);
 
 /* Default handler which does nothing */
 void interrupt_default_handler(void) {
@@ -24,13 +23,13 @@ void interrupt_init(void) {
 
     // Load default handlers
     for(i = 0; i < INTERRUPT_CNT; ++i)
-        interrupt_handlers[i] = interrupt_default_handler;
+        interruptHandlers[i] = interrupt_default_handler;
 }
 
 interrupt_handler interrupt_get_handler(int ndx) {
-    return interrupt_handlers[ndx];
+    return interruptHandlers[ndx];
 }
 
 void interrupt_set_handler(int ndx, void (*handler)(void)) {
-    interrupt_handlers[ndx] = handler;
+    interruptHandlers[ndx] = handler;
 }
