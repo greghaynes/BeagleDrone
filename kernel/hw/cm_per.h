@@ -1,0 +1,2 @@
+#define CM_PER_L3S_CLKSTCTRL                    0x44E00004
+#define CM_PER_L3S_CLKSTCTRL_CLKTRCTRL_SW_WKUP  0x2u

@@ -19,7 +19,10 @@ kernel/boot/isr.o: kernel/boot/isr.S
 kernel/boot/startup.o: kernel/boot/startup.c
 	$(CC_CMD) kernel/boot/startup.c -c -o kernel/boot/startup.o
 
-boot.bin: kernel/main.o kernel/interrupt.o kernel/boot/irq.o kernel/boot/isr.o kernel/boot/startup.o
+kernel/timers/dmtimer.o: kernel/timers/dmtimer.c
+	$(CC_CMD) kernel/timers/dmtimer.c -c -o kernel/timers/dmtimer.o
+
+boot.bin: kernel/main.o kernel/interrupt.o kernel/boot/irq.o kernel/boot/isr.o kernel/boot/startup.o kernel/timers/dmtimer.o
 	$(ARMGNU_PREFIX)-ld -nostartfiles -T kernel/boot/linker.ld kernel/main.o kernel/interrupt.o kernel/boot/irq.o kernel/boot/isr.o kernel/boot/startup.o -o boot.elf
 	$(ARMGNU_PREFIX)-objcopy boot.elf -O srec boot.srec
 	$(ARMGNU_PREFIX)-objcopy boot.elf -O binary boot.bin
