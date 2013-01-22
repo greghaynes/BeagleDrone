@@ -2,7 +2,6 @@
 #include "kernel/hw/intc.h"
 #include "kernel/sysdefs.h"
 
-extern "C" void (*volatile interruptHandlers[INTERRUPT_CNT])(void);
 void (*volatile interruptHandlers[INTERRUPT_CNT])(void);
 
 /* Default handler which does nothing */

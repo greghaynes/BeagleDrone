@@ -4,14 +4,9 @@
 
 #define NUM_INTERRUPTS (128u)
 
-extern "C" {
-
 extern void IRQHandler(void);
-
-}
 
 void irq_init(void) {
     REGP(IRQ_IRQ_HANDLER) = (uint32_t)IRQHandler;
 }
-
 

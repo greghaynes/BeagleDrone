@@ -1,5 +1,5 @@
 #include "kernel/interrupt.h"
 
-void start() {
+void main() {
     while(1);
 }

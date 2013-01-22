@@ -1,8 +1,8 @@
 #include "kernel/boot/irq.h"
 
-extern void start(void);
+extern void main(void);
 
-void main(void) {
+void start(void) {
     irq_init();
 
     start();
