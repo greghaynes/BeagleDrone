@@ -21,9 +21,18 @@ void dmtimer_clk_enable(int timer_num) {
             CM_PER_L3_CLKSTCTRL_CLKTRCTRL) !=
                 CM_PER_L3_CLKSTCTRL_CLKTRCTRL_SW_WKUP);
 
+        // Enable l3 module
+        REGP(CM_PER_L3_INSTR_CLKCTRL) =
+            CM_PER_L3_INSTR_CLKCTRL_MODULEMODE_ENABLE;
+
+        // Wait for enable to complete
+        while((REGP(CM_PER_L3_INSTR_CLKCTRL) &
+            CM_PER_L3_INSTR_CLKCTRL_MODULEMODE) !=
+                CM_PER_L3_INSTR_CLKCTRL_MODULEMODE_ENABLE);
+
         switch(timer_num) {
             case 2:
-
+                
                 break;
         }
     }
