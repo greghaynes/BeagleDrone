@@ -1,3 +1,7 @@
+#define CM_PER_L4LS_CLKSTCTRL                       0x44E00000
+#define CM_PER_L4LS_CLKSTCTRL_CLKTRCTRL_SW_WKUP     0x2u
+#define CM_PER_L4LS_CLKSTCTRL_CLKTRCTRL             0x3u
+
 #define CM_PER_L3S_CLKSTCTRL                        0x44E00004
 #define CM_PER_L3S_CLKSTCTRL_CLKTRCTRL_SW_WKUP      0x2u
 #define CM_PER_L3S_CLKSTCTRL_CLKTRCTRL              0x3u
@@ -6,6 +10,18 @@
 #define CM_PER_L3_CLKSTCTRL_CLKTRCTRL_SW_WKUP       0x2u
 #define CM_PER_L3_CLKSTCTRL_CLKTRCTRL               0x3u
 
+#define CM_PER_L4LS_CLKCTRL                         0x44E00060
+#define CM_PER_L4LS_CLKCTRL_MODULEMODE_ENABLE       0x2u
+#define CM_PER_L4LS_CLKCTRL_MODULEMODE              0x3u
+
 #define CM_PER_L3_INSTR_CLKCTRL                     0x44E000DC
-#define CM_PER_L3_INSTR_CLKCTRL_MODULEMODE          0x3u
 #define CM_PER_L3_INSTR_CLKCTRL_MODULEMODE_ENABLE   0x2u
+#define CM_PER_L3_INSTR_CLKCTRL_MODULEMODE          0x3u
+
+#define CM_PER_L3_CLKCTRL                           0x44E000E0
+#define CM_PER_L3_CLKCTRL_MODULEMODE_ENABLE         0x2u
+#define CM_PER_L3_CLKCTRL_MODULEMODE                0x3u
+
+#define CM_PER_OCPWP_L3_CLKSTCTRL                   0x44E0012C
+#define CM_PER_OCPWP_L3_CLKSTCTRL_CLKTRCTRL_SW_WKUP 0x2u
+#define CM_PER_OCPWP_L3_CLKSTCTRL_CLKTRCTRL         0x3u
