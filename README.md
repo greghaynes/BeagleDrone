@@ -29,5 +29,5 @@ http://github.com/esden/summon-arm-toolchain
 
 To build the package make sure the arm-none-eabi-\* tools are in your PATH.
 
-Running the command <pre>make</pre> will create a boot.bin, suitable for flashing
+Running the command `make` will create a boot.bin, suitable for flashing
 
