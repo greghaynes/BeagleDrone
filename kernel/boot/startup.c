@@ -45,7 +45,7 @@
 
 #include "kernel/hw/soc_AM335x.h"
 #include "kernel/hw/hw_types.h"
-#include "kernel/cp15.h"
+#include "kernel/drivers/cp15.h"
 
 /***********************************************************************
 **                            MACRO DEFINITIONS
