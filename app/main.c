@@ -1,12 +1,14 @@
 #include "utils/delay.h"
 #include "utils/uartStdio.h"
+#include "kernel/interrupt.h"
 
 int main() {
-    DelayTimerSetup();
     UARTStdioInit();
+    IntMasterIRQEnable();
+    DelayTimerSetup();
 
     while(1) {
-        UARTPutc('.');
+        UARTPutc('!');
         delay(1000);
     }
     return 0;

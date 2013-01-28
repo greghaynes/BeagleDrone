@@ -49,7 +49,7 @@ OUTPUT_ARCH(arm)
 SECTIONS
 {
 
-        . = 0x80000000;
+        . = 0x82000000;
         . = ALIGN(4);
         .startcode     :
         {
