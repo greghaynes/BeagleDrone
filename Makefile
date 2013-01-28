@@ -11,7 +11,9 @@ OBJS=kernel/boot/startup.o\
 	kernel/drivers/dmtimer.o\
 	kernel/cpu.o\
 	kernel/interrupt.o\
+    kernel/sysdelay.o\
     utils/uartStdio.o\
+    utils/delay.o\
     app/main.o
 
 all: boot.bin
