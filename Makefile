@@ -3,15 +3,16 @@ CFLAGS=-Wall -Werror -O2 -I. -fno-exceptions -fno-unwind-tables -fno-asynchronou
 CC=$(ARMGNU_PREFIX)-gcc
 LDFLAGS=-e Entry -u Entry -u __aeabi_uidiv -u __aeabi_idiv -nostartfiles --gc-sections
 
-OBJS=kernel/main.o\
-	kernel/boot/startup.o\
+OBJS=kernel/boot/startup.o\
 	kernel/boot/init.o\
 	kernel/boot/isr.o\
 	kernel/drivers/cp15.o\
     kernel/drivers/uart_irda_cir.o\
 	kernel/drivers/dmtimer.o\
 	kernel/cpu.o\
-	kernel/interrupt.o
+	kernel/interrupt.o\
+    utils/uartStdio.o\
+    app/main.o
 
 all: boot.bin
 
