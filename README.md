@@ -8,10 +8,17 @@ A barebone C OS for the beaglebone
 
 Robotics projects, specifically drones, often need far more memory than a
 typical microcontroller can offer. This is often solved by using a second
-computer running a medern operating system in exchange for a massive complexity
-hit. Rather than develop two separate code bases, this project aims to use the
-BeagleBone as a platform to develop a drone using embedded C without the
-resource limitations of a typical microcontroller.
+computer running a full modern operating system (such as linux). This causes a
+massive gain in complexity in both hardware in software.
+
+An alternative solution is to develop the drone control code on a powerful
+enough platform that only one computer is needed. This is generally avoided
+due to the difficulty of building up a code base for modern powerful computers.
+
+The BeagleDrone is a drone built using the BeagleBone, a 720Mhz ARM with 256MB
+of RAM and plenty of peripherals. This allows for modern state estimation and
+other algorithms to be used without the need for a second computer, or second
+code base.
 
 
 ## Dependencies
