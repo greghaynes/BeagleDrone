@@ -36,7 +36,7 @@ http://github.com/jsnyder/arm-eabi-toolchain
 
 ### Linux
 
-I have not tested jsnyder's toolchain on OS X but it claims to work on linux as
+I have not tested jsnyder's toolchain on Linux but it claims to work there as
 well. On Linux I tend to use esden's summon-arm-toolchain package:
 
 http://github.com/esden/summon-arm-toolchain
