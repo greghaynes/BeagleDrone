@@ -1,4 +1,9 @@
 /**
+ * This code has been modified from its original version by
+ * Gregory Haynes <greg@greghaynes.net>
+ */
+
+/**
  * \file   uartConsole.c
  *
  * \brief  This file contains functions which interface interactively
@@ -45,26 +50,14 @@
 #include "kernel/hw/soc_AM335x.h"
 #include "kernel/beaglebone.h"
 #include "kernel/hw/hw_types.h"
+#include "utils/uartConsole.h"
 
-/******************************************************************************
-**              INTERNAL MACRO DEFINITIONS
-******************************************************************************/
-#define UART_CONSOLE_BASE                    (SOC_UART_0_REGS)
-#define BAUD_RATE_115200                     (115200)
-#define UART_MODULE_INPUT_CLK                (48000000)
-
-/******************************************************************************
-**              INTERNAL FUNCTION DECLARATIONS
-******************************************************************************/
 static void UARTStdioInitExpClk(unsigned int baudRate,
                                 unsigned int rxTrigLevel,
                                 unsigned int txTrigLevel);
 static void UartFIFOConfigure(unsigned int txTrigLevel,
                               unsigned int rxTrigLevel);
 static void UartBaudRateSet(unsigned int baudRate);
-void UARTConsolePutc(unsigned char data);
-unsigned char UARTConsoleGetc(void);
-void UARTConsoleInit(void);
 
 /******************************************************************************
 **              FUNCTION DEFINITIONS

@@ -1,0 +1,9 @@
+#ifndef COMMUNICATION_H
+#define COMMUNICATION_H
+
+#define COMMUNICATION_UART_IN_BUFF_SIZE 512
+#define COMMUNICATION_CHECK_MAX_TIME 100
+
+void CommunicationCheck(void);
+
+#endif
