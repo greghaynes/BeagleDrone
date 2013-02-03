@@ -1,4 +1,4 @@
-# BeagleBareBone
+# BeagleDrone
 ==============
 
 A barebone C OS for the beaglebone
