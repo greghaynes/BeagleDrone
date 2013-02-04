@@ -1,3 +1,7 @@
+/**
+ * This file has been modified from its original version by
+ * Gregory Haynes <greg@greghaynes.net>
+ */
 /*
 * Copyright (C) 2010 Texas Instruments Incorporated - http://www.ti.com/ 
 */
@@ -37,7 +41,7 @@
  */
 
 /*
- * The starting address of DDR2 SDRAM is 0x80000000.
+ * The starting address of DDR2 SDRAM is 0x82000000.
  * Though the DDR size is >128 MB, we keep the top of the stack at
  * 128 MB. Assumed that the (application + stack depth) < 128 MB
  * The Decremeting Stack top address = 0x87FFFFF8.
