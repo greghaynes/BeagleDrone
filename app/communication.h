@@ -9,9 +9,6 @@
 
 void CommunicationsInit(void);
 
-// Call periodically to handle input
-void CommunicationCheck(void);
-
 // Send raw data
 void CommunicationSend(const char *data, unsigned int data_size);
 

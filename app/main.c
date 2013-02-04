@@ -9,7 +9,7 @@ int main() {
     IntMasterIRQEnable();
 
     while(1) {
-        CommunicationCheck();
+        ;
     }
     return 0;
 }
