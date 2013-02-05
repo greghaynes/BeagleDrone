@@ -36,11 +36,16 @@ void CommunicationsInit(void) {
 
 void CommunicationCheckWrite(void) {
     while(uart_out_buff_start != uart_out_buff_end) {
+        // Try to put byte in transmit buffer
         if(UARTCharPutNonBlocking(UART_CONSOLE_BASE,
                                   uart_out_buff[uart_out_buff_start]))
             uart_out_buff_start++;
         else
             return;
+
+        // Handle buffer wrapping
+        if(uart_out_buff_start >= COMMUNICATION_UART_OUT_BUFF_SIZE)
+            uart_out_buff_start = 0;
     }
     UARTIntDisable(UART_CONSOLE_BASE, UART_INT_THR);
 }
@@ -78,6 +83,10 @@ void CommunicationSend(const char *data, unsigned int data_size) {
     unsigned int i;
     for(i = 0;i < data_size;++i) {
         uart_out_buff[uart_out_buff_end++] = data[i];
+        
+        // Handle buffer wrap
+        if(uart_out_buff_end >= COMMUNICATION_UART_OUT_BUFF_SIZE)
+            uart_out_buff_end = 0;
     }
 
     UARTIntEnable(UART_CONSOLE_BASE, UART_INT_THR);
