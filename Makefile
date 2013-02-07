@@ -1,6 +1,5 @@
 ARMGNU_PREFIX=arm-none-eabi
 ARM_TOOLS_DIR=$(HOME)/Tools/toolchains/arm-cs-tools
-ARM_LIBPATHS=-L$(ARM_TOOLS_DIR)/lib/gcc/arm-none-eabi/4.6.3 -L$(ARM_TOOLS_DIR)/arm-none-eabi/lib
 
 CFLAGS=-mcpu=cortex-a8 -Dgcc -Wall -Werror -O2 -I. -fdata-sections -funsigned-char -ffunction-sections
 CC=$(ARMGNU_PREFIX)-gcc
