@@ -5,16 +5,33 @@
 #include "app/log.h"
 #include "communication.h"
 
-static signed char uart_in_buff[COMMUNICATION_UART_IN_BUFF_SIZE];
-static unsigned int uart_in_buff_used;
+#include <string.h>
 
-static unsigned char uart_out_buff[COMMUNICATION_UART_OUT_BUFF_SIZE];
+static char uart_in_buff[COMMUNICATION_UART_IN_BUFF_SIZE];
+static unsigned int uart_in_buff_used;
+static char deframed_buff[COMMUNICATION_UART_IN_BUFF_SIZE];
+static unsigned int deframed_buff_size;
+
+static char uart_out_buff[COMMUNICATION_UART_OUT_BUFF_SIZE];
 static unsigned int uart_out_buff_end;
 static unsigned int uart_out_buff_start;
 
 void UARTIsr(void);
 
 void CommunicationCheckForFrame(void) {
+    unsigned int ret_size;
+    unsigned int ret;
+
+    if((ret = afproto_get_data(uart_in_buff, uart_in_buff_used,
+                     deframed_buff, &ret_size)) >= 0) {
+        uart_in_buff_used -= ret;
+        memcpy(uart_in_buff, uart_in_buff + ret, uart_in_buff_used);
+        deframed_buff_size = ret;
+    } else if (ret_size != 0) {
+        uart_in_buff_used -= ret_size;
+        memcpy(uart_in_buff, uart_in_buff + ret_size, uart_in_buff_used);
+        deframed_buff_size = 0;
+    }
 }
 
 void CommunicationsInit(void) {

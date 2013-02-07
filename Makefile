@@ -1,9 +1,12 @@
 ARMGNU_PREFIX=arm-none-eabi
-ARM_GCC_LIBS=$(HOME)/Tools/toolchains/arm-cs-tools/lib/gcc/arm-none-eabi/4.6.3
+ARM_TOOLS_DIR=$(HOME)/Tools/toolchains/arm-cs-tools
+ARM_LIBPATHS=-L$(ARM_TOOLS_DIR)/lib/gcc/arm-none-eabi/4.6.3 -L$(ARM_TOOLS_DIR)/arm-none-eabi/lib
 
 CFLAGS=-mcpu=cortex-a8 -Dgcc -Wall -Werror -O2 -I. -fdata-sections -funsigned-char -ffunction-sections
 CC=$(ARMGNU_PREFIX)-gcc
-LDFLAGS=-e Entry -u Entry -u __aeabi_uidiv -u __aeabi_idiv -nostartfiles --gc-sections -L$(ARM_GCC_LIBS) -lgcc
+LDFLAGS=-static -e Entry -u Entry -u __aeabi_uidiv -u __aeabi_idiv -nostartfiles --gc-sections
+LD_LIBS=-L$(ARM_TOOLS_DIR)/lib/gcc/arm-none-eabi/4.6.3 -lgcc -L$(ARM_TOOLS_DIR)/arm-none-eabi/lib -lg -lc -lm
+
 
 OBJS=kernel/boot/startup.o\
 	kernel/boot/init.o\
@@ -35,7 +38,7 @@ all: boot.bin
 	$(CC) $(CFLAGS) -c $< -o $@
 
 boot.bin: $(OBJS)
-	$(ARMGNU_PREFIX)-ld $(LDFLAGS) -T kernel/boot/linker.ld $(OBJS) -o boot.elf
+	$(ARMGNU_PREFIX)-ld $(LDFLAGS) -T kernel/boot/linker.ld $(OBJS) -o boot.elf $(LD_LIBS)
 	$(ARMGNU_PREFIX)-objcopy boot.elf -O srec boot.srec
 	$(ARMGNU_PREFIX)-objcopy boot.elf -O binary boot.bin
 
