@@ -2,9 +2,9 @@ ARMGNU_PREFIX=arm-none-eabi
 ARM_TOOLS_DIR=$(HOME)/Tools/toolchains/arm-cs-tools
 
 
-CFLAGS=-mcpu=cortex-a8 -Dgcc -Wall -Werror -O2 -I. -fdata-sections -funsigned-char -ffunction-sections
+CFLAGS=-mcpu=cortex-a8 -Dgcc -Wall -Werror -O2 -I. -fdata-sections -funsigned-char -ffunction-sections -g
 CC=$(ARMGNU_PREFIX)-gcc
-LDFLAGS=-static -e Entry -u Entry -u __aeabi_uidiv -u __aeabi_idiv -nostartfiles --gc-sections
+LDFLAGS=-static -e Entry -u Entry -u __aeabi_uidiv -u __aeabi_idiv -nostartfiles --gc-sections -g
 LD_LIBS=-L$(ARM_TOOLS_DIR)/lib/gcc/arm-none-eabi/4.6.3 -lgcc -L$(ARM_TOOLS_DIR)/arm-none-eabi/lib -lg -lc -lm
 
 
