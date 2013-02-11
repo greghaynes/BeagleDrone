@@ -50,17 +50,25 @@ void CommunicationCheckWrite(void) {
         // Try to put byte in transmit buffer
         if(UARTCharPutNonBlocking(UART_CONSOLE_BASE,
                                   uart_out_buff[uart_out_buff_start])) {
+#ifdef DEBUG_UART
             UARTprintf("Char written, start at %u\n", uart_out_buff_start);
+#endif
             uart_out_buff_start++;
-        }
-        else
+        } else {
+#ifdef DEBUG_UART
+            UARTPuts("THR full, returning write\n\n", 26);
             return;
+#endif
+        }
 
         // Handle buffer wrapping
         if(uart_out_buff_start >= COMMUNICATION_UART_OUT_BUFF_SIZE)
             uart_out_buff_start = 0;
     }
 
+#ifdef DEBUG_UART
+    UARTPuts("Write completed\n\n", 17);
+#endif
     UARTIntDisable(UART_CONSOLE_BASE, UART_INT_THR);
 }
 
