@@ -7,9 +7,9 @@
 
 #define COMMUNICATION_CHECK_MAX_TIME 100
 
-void CommunicationsInit(void);
+void CommunicationInit(void);
 
-// Send raw data
+// Send data in afproto frame
 void CommunicationSend(const char *data, unsigned int data_size);
 
 #endif

@@ -6,11 +6,12 @@
 
 int main() {
     SysDelayTimerSetup();
-    CommunicationsInit();
+    CommunicationInit();
     IntMasterIRQEnable();
 
     while(1) {
-        CommunicationSend("\r\nHello, world!\r\n", 14);
+        CommunicationSend("Hello, world!\r\n", 15);
+        LogCString(LOG_LEVEL_DEBUG, "LogMessage\r\n");
         Sysdelay(1000);
     }
     return 0;

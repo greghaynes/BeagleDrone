@@ -83,6 +83,7 @@ void CommunicationCheckRead(void) {
         }
 
         uart_in_buff[uart_in_buff_used++] = in_char;
+
         // We might have hit the end of a frame
         if(in_char == AFPROTO_END_BYTE) {
             CommunicationCheckForFrame();
@@ -95,6 +96,10 @@ void CommunicationCheck(void) {
     CommunicationCheckWrite();
 }
 
+static void UARTIsr(void) {
+    CommunicationCheck();
+}
+
 void CommunicationSend(const char *data, unsigned int data_size) {
     UARTIntEnable(UART_CONSOLE_BASE, UART_INT_THR);
 
@@ -105,22 +110,18 @@ void CommunicationSend(const char *data, unsigned int data_size) {
     }
 
     unsigned int i;
+
     for(i = 0;i < data_size;++i) {
+        // TODO Make this send afproto frame
         uart_out_buff[uart_out_buff_end++] = data[i];
         
         // Handle buffer wrap
         if(uart_out_buff_end >= COMMUNICATION_UART_OUT_BUFF_SIZE)
             uart_out_buff_end = 0;
     }
-
-    //CommunicationCheckWrite();
 }
 
-static void UARTIsr(void) {
-    CommunicationCheck();
-}
-
-void CommunicationsInit(void) {
+void CommunicationInit(void) {
     uart_in_buff_used = 0;
     uart_out_buff_start = 0;
     uart_out_buff_end = 0;
