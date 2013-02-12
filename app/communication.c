@@ -3,6 +3,7 @@
 #include "utils/uartConsole.h"
 #include "utils/uartStdio.h"
 #include "app/afproto.h"
+#include "app/crc16.h"
 #include "app/log.h"
 #include "communication.h"
 
@@ -100,25 +101,46 @@ static void UARTIsr(void) {
     CommunicationCheck();
 }
 
-void CommunicationSend(const char *data, unsigned int data_size) {
-    UARTIntEnable(UART_CONSOLE_BASE, UART_INT_THR);
+static void CommunicationSendChar(char ch) {
+    uart_out_buff[uart_out_buff_end++] = ch;
+    if(uart_out_buff_end >= COMMUNICATION_UART_OUT_BUFF_SIZE)
+        uart_out_buff_end = 0;
+}
 
+void CommunicationSend(const char *data, unsigned int data_size) {
     if(data_size > COMMUNICATION_UART_OUT_BUFF_SIZE) {
         LogCString(LOG_LEVEL_ERROR, "Attempting to send message larger than"
                    " output buffer size, dropping message");
         return;
     }
 
-    unsigned int i;
+    CommunicationSendChar(AFPROTO_START_BYTE);
 
+    unsigned int i;
+    short crc = 0;
+
+    int prev_escape = 0;
     for(i = 0;i < data_size;++i) {
-        // TODO Make this send afproto frame
-        uart_out_buff[uart_out_buff_end++] = data[i];
-        
-        // Handle buffer wrap
-        if(uart_out_buff_end >= COMMUNICATION_UART_OUT_BUFF_SIZE)
-            uart_out_buff_end = 0;
+        if(prev_escape) {
+            prev_escape = 0;
+            crc = crc16_floating(data[i], crc);
+            CommunicationSendChar(data[i] ^ 0x20);
+        } else if (data[i] == AFPROTO_START_BYTE || data[i] == AFPROTO_ESC_BYTE) {
+            prev_escape = 1;
+            CommunicationSendChar(AFPROTO_ESC_BYTE);
+            --i;
+        } else {
+            crc = crc16_floating(data[i], crc);
+            CommunicationSendChar(data[i]);
+        }
     }
+
+    char *crc_ch = (char*)&crc;
+    CommunicationSendChar(crc_ch[1]);
+    CommunicationSendChar(crc_ch[0]);
+    CommunicationSendChar(AFPROTO_END_BYTE);
+
+    UARTIntEnable(UART_CONSOLE_BASE, UART_INT_THR);
 }
 
 void CommunicationInit(void) {

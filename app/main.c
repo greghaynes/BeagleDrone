@@ -10,8 +10,8 @@ int main() {
     IntMasterIRQEnable();
 
     while(1) {
-        CommunicationSend("Hello, world!\r\n", 15);
-        LogCString(LOG_LEVEL_DEBUG, "LogMessage\r\n");
+        //CommunicationSend("Hello, world!\r\n", 15);
+        LogCString(LOG_LEVEL_ERROR, "LogMessage\r\n");
         Sysdelay(1000);
     }
     return 0;
