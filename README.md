@@ -48,3 +48,10 @@ To build the package make sure the arm-none-eabi-\* tools are in your PATH.
 
 Running the command `make` will create a boot.bin, suitable for flashing
 
+
+## Flashing
+
+I have yet to find a pleasant method for flashing. Currently, I use an SD card
+with U-Boot (comes on standard beaglebone linux image). I run the `loady`
+command at the U-Boot prompt, and use yterminal protocol (via minicom) to
+send the boot.bin. I then execute `go 0x82000000` to run the binary.
