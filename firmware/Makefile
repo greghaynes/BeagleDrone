@@ -11,6 +11,7 @@ OBJS=kernel/boot/startup.o\
 	kernel/boot/isr.o\
 	kernel/platform/dmtimer.o\
 	kernel/platform/uart.o\
+	kernel/platform/hsi2c.o\
 	kernel/drivers/cp15.o\
 	kernel/drivers/uart_irda_cir.o\
 	kernel/drivers/dmtimer.o\
