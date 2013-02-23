@@ -28,6 +28,7 @@ OBJS=kernel/boot/startup.o\
 	app/communication.o\
 	app/command.o\
 	app/log.o\
+	app/motors.o\
 	app/main.o
 
 all: boot.bin
