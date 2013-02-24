@@ -4,18 +4,28 @@
 #include "app/communication.h"
 #include "app/log.h"
 #include "app/motors.h"
-#include "app/imu.h"
+#include "app/imusensors.h"
 
 int main() {
+    // Setup sysdelay timer
     SysDelayTimerSetup();
+
+    // Initialize communication
     CommunicationInit();
+
+    // Enable master IRQ
     IntMasterIRQEnable();
+
+    // Enable arm interrupt controller
     IntAINTCInit();
+
+    // Init motors
     MotorsInit();
-    IMUInit();
+
+    // Init IMU Sensors
+    IMUSensorsInit();
 
     while(1) {
-        //CommunicationSend("Hello, world!\r\n", 15);
         LogCString(LOG_LEVEL_ERROR, "LogMessage\r\n");
         Sysdelay(1000);
     }

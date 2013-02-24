@@ -1,11 +1,11 @@
 #include "kernel/hw/soc_AM335x.h"
 #include "kernel/drivers/hsi2c.h"
 #include "kernel/beaglebone.h"
-#include "imu.h"
+#include "imusensors.h"
 
 #define I2C_SLAVE_ADDR 0x00
 
-void IMUInit(void) {
+void IMUSensorsInit(void) {
     // Enable the clock for I2C1
     I2C1ModuleClkConfig();
 

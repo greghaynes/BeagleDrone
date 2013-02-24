@@ -30,7 +30,7 @@ OBJS=kernel/boot/startup.o\
 	app/command.o\
 	app/log.o\
 	app/motors.o\
-	app/imu.o\
+	app/imusensors.o\
 	app/main.o
 
 all: boot.bin
