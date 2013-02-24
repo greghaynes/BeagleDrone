@@ -5,7 +5,16 @@
 
 #define I2C_SLAVE_ADDR 0x00
 
+static StateRotationalShort sensor_gyro;
+static StateRotationalShort sensor_accelero;
+static StateRotationalShort sensor_magneto;
+
 void IMUSensorsInit(void) {
+    // Zero our sensors
+    StateZeroRotationalShort(&sensor_gyro);
+    StateZeroRotationalShort(&sensor_accelero);
+    StateZeroRotationalShort(&sensor_magneto);
+
     // Enable the clock for I2C1
     I2C1ModuleClkConfig();
 
@@ -26,4 +35,16 @@ void IMUSensorsInit(void) {
 
     // Bring out of reset
     I2CMasterEnable(SOC_I2C_1_REGS);
+}
+
+const StateRotationalShort *IMUSensorsGetGyro(void) {
+    return &sensor_gyro;
+}
+
+const StateRotationalShort *IMUSensorsGetAccelero(void) {
+    return &sensor_accelero;
+}
+
+const StateRotationalShort *IMUSensorsGetMagneto(void) {
+    return &sensor_magneto;
 }
