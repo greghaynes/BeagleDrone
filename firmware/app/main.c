@@ -4,6 +4,7 @@
 #include "app/communication.h"
 #include "app/log.h"
 #include "app/motors.h"
+#include "app/imu.h"
 
 int main() {
     SysDelayTimerSetup();
@@ -11,6 +12,7 @@ int main() {
     IntMasterIRQEnable();
     IntAINTCInit();
     MotorsInit();
+    IMUInit();
 
     while(1) {
         //CommunicationSend("Hello, world!\r\n", 15);
