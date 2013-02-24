@@ -17,6 +17,7 @@ OBJS=kernel/boot/startup.o\
 	kernel/drivers/uart_irda_cir.o\
 	kernel/drivers/dmtimer.o\
 	kernel/drivers/ehrpwm.o\
+	kernel/drivers/hsi2c.o\
 	kernel/cpu.o\
 	kernel/interrupt.o\
 	kernel/sysdelay.o\

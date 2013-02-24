@@ -9,6 +9,7 @@ int main() {
     SysDelayTimerSetup();
     CommunicationInit();
     IntMasterIRQEnable();
+    IntAINTCInit();
     MotorsInit();
 
     while(1) {
