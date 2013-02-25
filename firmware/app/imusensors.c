@@ -1,15 +1,20 @@
 #include "kernel/hw/soc_AM335x.h"
 #include "kernel/drivers/hsi2c.h"
+#include "kernel/interrupt.h"
 #include "kernel/beaglebone.h"
 #include "imusensors.h"
 
-#define I2C_SLAVE_ADDR 0x00
+#define GYRO_I2C_WRITE_ADDR 0xD0
+#define GYRO_I2C_READ_ADDR 0xD1
 
 static StateRotationalShort sensor_gyro;
 static StateRotationalShort sensor_accelero;
 static StateRotationalShort sensor_magneto;
 
-void IMUSensorsInit(void) {
+static void I2CIsr(void) {
+}
+
+static void SetupI2C(void) {
     // Zero our sensors
     StateZeroRotationalShort(&sensor_gyro);
     StateZeroRotationalShort(&sensor_accelero);
@@ -27,14 +32,27 @@ void IMUSensorsInit(void) {
     // Disable auto idle
     I2CAutoIdleDisable(SOC_I2C_1_REGS);
 
-    // Set bus speed
-    I2CMasterInitExpClk(SOC_I2C_1_REGS, 48000000, 12000000, 100000);
+    // Set bus speed to 400khz
+    I2CMasterInitExpClk(SOC_I2C_1_REGS, 48000000, 12000000, 400000);
 
     // Set slave address
-    I2CMasterSlaveAddrSet(SOC_I2C_1_REGS, I2C_SLAVE_ADDR);
+    I2CMasterSlaveAddrSet(SOC_I2C_1_REGS, GYRO_I2C_WRITE_ADDR);
 
     // Bring out of reset
     I2CMasterEnable(SOC_I2C_1_REGS);
+
+    // Set I2C ISR
+    IntRegister(SYS_INT_I2C1INT, I2CIsr);
+
+    // Set ISR Priority
+    IntPrioritySet(SYS_INT_I2C1INT, 1, AINTC_HOSTINT_ROUTE_IRQ );
+
+    // Enable I2C Interrupt
+    IntSystemEnable(SYS_INT_I2C1INT);
+}
+
+void IMUSensorsInit(void) {
+    SetupI2C();
 }
 
 const StateRotationalShort *IMUSensorsGetGyro(void) {
