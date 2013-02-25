@@ -155,7 +155,7 @@ void CommunicationInit(void) {
     IntRegister(SYS_INT_UART0INT, UARTIsr);
 
     // Set interrupt priority
-    IntPrioritySet(SYS_INT_UART0INT, 2, AINTC_HOSTINT_ROUTE_IRQ);
+    IntPrioritySet(SYS_INT_UART0INT, 1, AINTC_HOSTINT_ROUTE_IRQ);
 
     // Enable system interrupt
     IntSystemEnable(SYS_INT_UART0INT);
