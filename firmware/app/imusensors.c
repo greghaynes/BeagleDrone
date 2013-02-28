@@ -31,18 +31,25 @@ typedef enum IMUI2CState {
 } IMUI2CState;
 static IMUI2CState imu_i2c_state = IMU_I2C_STATE_STARTING;
 
+volatile unsigned int sensor_read_buff_next = 0;
+volatile unsigned char sensor_read_buff[50];
+
 static void I2CIsr(void) {
     unsigned int status;
 
     // Get i2c interrupt status
-    status = I2CMasterIntStatus(SOC_I2C_0_REGS);
+    status = I2CMasterIntStatus(SOC_I2C_1_REGS);
 
     // Clear all int status flags but recv and transmit rdy
-    I2CMasterIntClearEx(SOC_I2C_0_REGS, (status &
+    I2CMasterIntClearEx(SOC_I2C_1_REGS, (status &
         ~(I2C_INT_RECV_READY | I2C_INT_TRANSMIT_READY)));
 
     if(status & I2C_INT_RECV_READY) {
-        
+        // Read data into read buff
+        sensor_read_buff[sensor_read_buff_next++] = I2CMasterDataGet(SOC_I2C_1_REGS);
+
+        // Clear receive rdy interrupt
+        I2CMasterIntClearEx(SOC_I2C_1_REGS,  I2C_INT_RECV_READY);
     }
 }
 
