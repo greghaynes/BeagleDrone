@@ -8,4 +8,8 @@ const StateRotationalShort *IMUSensorsGetGyro(void);
 const StateRotationalShort *IMUSensorsGetAccelero(void);
 const StateRotationalShort *IMUSensorsGetMagneto(void);
 
+void IMUSensorsUpdateGyro(void);
+void IMUSensorsUpdateAccelero(void);
+void IMUSensorsUpdateMagneto(void);
+
 #endif
