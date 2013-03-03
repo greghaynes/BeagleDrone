@@ -30,6 +30,8 @@ static IMUI2CState imu_i2c_state;
 volatile unsigned int sensor_read_buff_next;
 volatile unsigned char sensor_read_buff[50];
 
+static void UpdateNextSensor(void);
+
 static void I2CIsr(void) {
     unsigned int status;
 
@@ -49,11 +51,38 @@ static void I2CIsr(void) {
     }
 }
 
-static void UpdateNextSensor(void) {
-    if(imu_i2c_state != IMU_I2C_STATE_IDLE)
-        return;
+static void StartGyroUpdate(void) {
+    imu_i2c_state = IMU_I2C_STATE_GYRO_READING;
+    sensor_do_read = sensor_do_read & ~GYRO_DO_READ_MASK;
 
-    
+    // Placeholder until read is performed
+    UpdateNextSensor();
+}
+
+static void StartAcceleroUpdate(void) {
+    imu_i2c_state = IMU_I2C_STATE_ACCELERO_READING;
+    sensor_do_read = sensor_do_read & ~ACCELERO_DO_READ_MASK;
+
+    // Placeholder until read is performed
+    UpdateNextSensor();
+}
+
+static void UpdateNextSensor(void) {
+    switch(imu_i2c_state) {
+    case IMU_I2C_STATE_STARTING:
+        StartGyroUpdate();
+        break;
+    case IMU_I2C_STATE_GYRO_READING:
+        if(sensor_do_read & ACCELERO_DO_READ_MASK)
+            StartAcceleroUpdate();
+        break;
+    case IMU_I2C_STATE_ACCELERO_READING:
+        if(sensor_do_read & GYRO_DO_READ_MASK)
+            StartGyroUpdate();
+        break;
+    default:
+        break;
+    }
 }
 
 static void SetupI2C(void) {
@@ -95,9 +124,6 @@ static void SetupI2C(void) {
 
     // Enable I2C Interrupt
     IntSystemEnable(SYS_INT_I2C1INT);
-
-    // Set local imu state machine to ready
-    imu_i2c_state = IMU_I2C_STATE_IDLE;
 
     // In case we got an INT during startup
     UpdateNextSensor();
