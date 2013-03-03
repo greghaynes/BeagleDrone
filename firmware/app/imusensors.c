@@ -9,29 +9,25 @@
 
 static StateRotationalShort sensor_gyro;
 static StateRotationalShort sensor_accelero;
-static StateRotationalShort sensor_magneto;
 
-#define GYRO_SENSOR_ID 1
-#define ACCELERO_SENSOR_ID 2
-#define MAGNETO_SENSOR_ID 3
+#define GYRO_SENSOR_ID 0
+#define ACCELERO_SENSOR_ID 1
+#define NUM_SENSORS 2
 
-// Bitmask for sensors that are ready for a read
-static unsigned int sensor_do_read;
-
+// Bitmask for determining if sensors need to be read
+volatile unsigned int sensor_do_read;
 #define GYRO_DO_READ_MASK (1 << GYRO_SENSOR_ID)
 #define ACCELERO_DO_READ_MASK (1 << ACCELERO_SENSOR_ID)
-#define MAGNETO_DO_READ_MASK (1 << MAGNETO_SENSOR_ID)
 
 typedef enum IMUI2CState {
     IMU_I2C_STATE_STARTING,
-    IMU_I2C_STATE_READY,
-    IMU_I2C_STATE_GYRO_UPDATE,
-    IMU_I2C_STATE_ACCELERO_UPDATE,
-    IMU_I2C_STATE_MAGNETO_UPDATE,
+    IMU_I2C_STATE_IDLE,
+    IMU_I2C_STATE_GYRO_READING,
+    IMU_I2C_STATE_ACCELERO_READING,
 } IMUI2CState;
-static IMUI2CState imu_i2c_state = IMU_I2C_STATE_STARTING;
+static IMUI2CState imu_i2c_state;
 
-volatile unsigned int sensor_read_buff_next = 0;
+volatile unsigned int sensor_read_buff_next;
 volatile unsigned char sensor_read_buff[50];
 
 static void I2CIsr(void) {
@@ -54,15 +50,21 @@ static void I2CIsr(void) {
 }
 
 static void UpdateNextSensor(void) {
-    if(imu_i2c_state != IMU_I2C_STATE_READY)
+    if(imu_i2c_state != IMU_I2C_STATE_IDLE)
         return;
+
+    
 }
 
 static void SetupI2C(void) {
+    // Zero out I2C State
+    sensor_do_read = 0;
+    sensor_read_buff_next = 0;
+    imu_i2c_state = IMU_I2C_STATE_STARTING;
+
     // Zero our sensors
     StateZeroRotationalShort(&sensor_gyro);
     StateZeroRotationalShort(&sensor_accelero);
-    StateZeroRotationalShort(&sensor_magneto);
 
     // Enable the clock for I2C1
     I2C1ModuleClkConfig();
@@ -95,8 +97,9 @@ static void SetupI2C(void) {
     IntSystemEnable(SYS_INT_I2C1INT);
 
     // Set local imu state machine to ready
-    imu_i2c_state = IMU_I2C_STATE_READY;
+    imu_i2c_state = IMU_I2C_STATE_IDLE;
 
+    // In case we got an INT during startup
     UpdateNextSensor();
 }
 
@@ -112,10 +115,6 @@ const StateRotationalShort *IMUSensorsGetAccelero(void) {
     return &sensor_accelero;
 }
 
-const StateRotationalShort *IMUSensorsGetMagneto(void) {
-    return &sensor_magneto;
-}
-
 void IMUSensorsUpdateGyro(void) {
     sensor_do_read |= GYRO_DO_READ_MASK;
 }
@@ -124,6 +123,3 @@ void IMUSensorsUpdateAccelero(void) {
     sensor_do_read |= ACCELERO_DO_READ_MASK;
 }
 
-void IMUSensorsUpdateMagneto(void) {
-    sensor_do_read |= MAGNETO_DO_READ_MASK;
-}
