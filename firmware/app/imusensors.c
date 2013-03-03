@@ -142,10 +142,16 @@ const StateRotationalShort *IMUSensorsGetAccelero(void) {
 }
 
 void IMUSensorsUpdateGyro(void) {
-    sensor_do_read |= GYRO_DO_READ_MASK;
+    if(imu_i2c_state != IMU_I2C_STATE_IDLE)
+        sensor_do_read |= GYRO_DO_READ_MASK;
+    else
+        StartGyroUpdate();
 }
 
 void IMUSensorsUpdateAccelero(void) {
-    sensor_do_read |= ACCELERO_DO_READ_MASK;
+    if(imu_i2c_state != IMU_I2C_STATE_IDLE)
+        sensor_do_read |= ACCELERO_DO_READ_MASK;
+    else
+        StartAcceleroUpdate();
 }
 
