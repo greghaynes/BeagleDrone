@@ -43,7 +43,6 @@ int afproto_get_data(const char *src,
             *(dest++) = orig_char;
         }
         else if (*src == AFPROTO_ESC_BYTE) {
-            crc_check = crc16_floating(AFPROTO_ESC_BYTE, crc_check);
             prev_escape = 1;
         }
         else {
@@ -90,7 +89,6 @@ int afproto_frame_data(const char *src,
         else if (*src == AFPROTO_START_BYTE || *src == AFPROTO_ESC_BYTE) {
             prev_escape = 1;
             *(dest++) = AFPROTO_ESC_BYTE;
-            crc = crc16_floating(AFPROTO_ESC_BYTE, crc);
             continue;
         }
         else {
@@ -118,30 +116,34 @@ int main(int argc, char **argv) {
     char buff[512];
     unsigned int write_len;
 
-    int i;
-    for(i = 0;i < 256;++i)
-        orig_msg[i]=(char)i;
-    orig_msg[257] = 0;
+    int size;
+    for(size = 0;size < 256;++size) {
+        printf("Testing string of %d bytes..", size);
+        int i;
+        for(i = 0;i < size;++i)
+            orig_msg[i]=(char)i;
+        orig_msg[size] = 0;
 
-    int ret;
-    if((ret = afproto_frame_data(orig_msg, 256, buff, &write_len)) < 0)
-        printf("Data framing error %d!\n", ret);
-    printf("Frame is %d bytes long\n", write_len);
-    if((ret = afproto_get_data(buff, write_len, buff, &write_len)) < 0)
-        printf("Get data error %d!\n", ret);
+        int ret;
+        if((ret = afproto_frame_data(orig_msg, size, buff, &write_len)) < 0)
+            printf("Data framing error %d!\n", ret);
+        //printf("Frame is %d bytes long\n", write_len);
+        if((ret = afproto_get_data(buff, write_len, buff, &write_len)) < 0)
+            printf("Get data error %d!\n", ret);
 
-    for(i = 0;i < 256;++i) {
-        if(buff[i] != orig_msg[i]) {
-            printf("Error, %d\n", i);
+        for(i = 0;i < size;++i) {
+            if(buff[i] != orig_msg[i]) {
+                printf("Error, %d\n", i);
+                return 1;
+            }
+        }
+
+        if(write_len != size) {
+            printf("Length not properly detected, got %d\n", write_len);
             return 1;
         }
+        printf("Win!\n");
     }
-
-    if(write_len != 256) {
-        printf("Length not properly detected, got %d\n", write_len);
-        return 1;
-    }
-    printf("Win!\n");
     return 0;
 }
 #endif
