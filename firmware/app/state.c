@@ -1,14 +1,8 @@
 #include "mathtypes.h"
 #include "state.h"
 
-void StateZeroRotationalShort(StateRotationalShort *state) {
-    state->roll = 0;
-    state->pitch = 0;
-    state->yaw = 0;
-}
-
 /*! \brief Update state from angular velocity */
-void StateUpdateFromAngVel(StateFull *state,
+void StateUpdateFromAngVel(State *state,
                            const StateRotationalFloat *ang_vel,
                            float time_delta) {
     Quaternion *rot_quat = &state->r_b_to_i;
@@ -27,9 +21,17 @@ void StateUpdateFromAngVel(StateFull *state,
     QuaternionMultiply(&delta_quat, rot_quat, rot_quat);
 }
 
+void StateInit(State *s) {
+    Vector4FZero(&s->r_b_to_i);
+    Vector3FZero((Vector3F*)&s->rot_eulers);
+}
+
 #ifdef STATE_TEST
+#include <stdio.h>
 
 int main(int argc, char **argv) {
+    State s;
+    s = StateInit(s);
 }
 
 #endif

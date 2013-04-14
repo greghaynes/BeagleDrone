@@ -2,6 +2,7 @@
 #include "kernel/drivers/hsi2c.h"
 #include "kernel/interrupt.h"
 #include "kernel/beaglebone.h"
+#include "app/mathtypes.h"
 #include "imusensors.h"
 
 #define GYRO_I2C_WRITE_ADDR 0xD0
@@ -92,8 +93,8 @@ static void SetupI2C(void) {
     imu_i2c_state = IMU_I2C_STATE_STARTING;
 
     // Zero our sensors
-    StateZeroRotationalShort(&sensor_gyro);
-    StateZeroRotationalShort(&sensor_accelero);
+    Vector3FZero((Vector3F*)&sensor_gyro);
+    Vector3FZero((Vector3F*)&sensor_accelero);
 
     // Enable the clock for I2C1
     I2C1ModuleClkConfig();

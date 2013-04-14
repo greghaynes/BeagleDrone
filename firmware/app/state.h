@@ -3,7 +3,7 @@
 
 #include "quaternion.h"
 
-typedef struct RotationalFloat {
+typedef struct StateRotationalFloat {
     float roll;
     float pitch;
     float yaw;
@@ -17,8 +17,12 @@ typedef struct StateRotationalShort {
 
 typedef struct State {
     Quaternion r_b_to_i;
-} StateFull;
+    StateRotationalFloat rot_eulers;
+} State;
 
-void StateZeroRotationalShort(StateRotationalShort *state);
+void StateUpdateFromAngVel(State *state,
+                           const StateRotationalFloat *ang_vel,
+                           float time_delta);
+void StateInit(State *s);
 
 #endif

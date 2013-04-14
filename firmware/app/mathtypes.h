@@ -9,5 +9,8 @@ typedef struct Vector4F {
     float a, b, c, d;
 } Vector4F;
 
+void Vector3FZero(Vector3F *v);
+void Vector4FZero(Vector4F *v);
+
 #endif
 
