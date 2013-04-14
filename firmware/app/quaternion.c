@@ -2,10 +2,10 @@
 
 #include "quaternion.h"
 
-void QuaternionFromEulers(float a, float b, float c, Quaternion *q) {
-    float a_2 = a / 2;
-    float b_2 = b / 2;
-    float c_2 = c / 2;
+void QuaternionFromEulers(const Vector3F *eulers, Quaternion *q) {
+    float a_2 = eulers->a / 2;
+    float b_2 = eulers->b / 2;
+    float c_2 = eulers->c / 2;
     float cos_a_2 = cos(a_2);
     float cos_b_2 = cos(b_2);
     float cos_c_2 = cos(c_2);
@@ -24,6 +24,16 @@ void QuaternionFromEulers(float a, float b, float c, Quaternion *q) {
 
     q->d = (cos_a_2 * cos_b_2 * sin_c_2) -
            (sin_a_2 * sin_b_2 * cos_c_2);
+}
+
+void QuaternionToEulers(const Quaternion *q, Vector3F *dest) {
+    dest->a = atanf((2 * ((q->a*q->b) + (q->c*q->d)))
+        / (1 - (2 * ((q->b*q->b) + (q->c*q->c))))
+        );
+    dest->b = asinf(2 * ((q->a * q->c) - (q->d * q->b)));
+    dest->c = atanf((2 * ((q->a * q->d) + (q->b * q->c)))
+        / (1 - (2 * ((q->c*q->c) + (q->d*q->d))))
+        );
 }
 
 void QuaternionMultiply(const Quaternion *q,
