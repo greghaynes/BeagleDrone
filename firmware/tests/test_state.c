@@ -11,7 +11,7 @@ void StatePrint(const State *state) {
            rot_eulers->yaw);
 }
 
-int test_basic_state_angvel_update(void) {
+void test_basic_state_angvel_update(void) {
     State s;
     StateInit(&s);
     StatePrint(&s);

@@ -3,7 +3,7 @@
 
 typedef struct TestInfo {
     const char *description;
-    int (*test_function)(void);
+    void (*test_function)(void);
 } TestInfo;
 
 void run_tests(const TestInfo tests[]);
