@@ -26,13 +26,3 @@ void StateInit(State *s) {
     Vector3FZero((Vector3F*)&s->rot_eulers);
 }
 
-#ifdef STATE_TEST
-#include <stdio.h>
-
-int main(int argc, char **argv) {
-    State s;
-    s = StateInit(s);
-}
-
-#endif
-
