@@ -49,11 +49,11 @@ void QuaternionToEulers(const Quaternion *q, Vector3F *dest) {
 
     float v = 2.0 * (q->c * q->a - q->b * q->d);
 
-    if(v > (1 - .001) && v < (1 + .001)) {
+    if(NearEqual(v, 1, .001)) {
         dest->a = 0;
         dest->b = PI_DIV_2;
         dest->c = -2.0 * atan2f(q->b, q->a);
-    } else if (v > (-1 - .001) && v < (-1 + .001)) {
+    } else if (NearEqual(v, -1, .001)) {
         dest->a = 0;
         dest->b = PI_DIV_2;
         dest->c = 2.0 * atan2f(q->b, q->a);

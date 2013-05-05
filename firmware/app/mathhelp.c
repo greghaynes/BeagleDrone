@@ -20,3 +20,7 @@ int Vector3FEqual(const Vector3F *a, const Vector3F *b) {
 int Vector4FEqual(const Vector4F *a, const Vector4F *b) {
     return a->a == b->a && a->b == b->b && a->c == b->c && a->d == b->d;
 }
+
+int NearEqual(float a, float b, float error) {
+    return a < (b + error) && a > (b - error);
+}

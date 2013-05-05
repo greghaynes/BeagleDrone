@@ -26,16 +26,16 @@ void test_basic_quaternion_from_eulers(void) {
     eulers.a = PI;
     QuaternionFromEulers(&eulers, &q);
     QuaternionPrint(&q);
-    assert(q.a < .0001 && q.a > -.0001);
-    assert(q.b < 1.0001 && q.b > .9999);
-    assert(q.c < .0001 && q.c > -.0001);
-    assert(q.c < .0001 && q.c > -.0001);
+    assert(NearEqual(q.a, 0, .0001));
+    assert(NearEqual(q.b, 1, .0001));
+    assert(NearEqual(q.c, 0, .0001));
+    assert(NearEqual(q.d, 0, .0001));
 
     eulers.a = PI_DIV_2;
     QuaternionFromEulers(&eulers, &q);
     QuaternionPrint(&q);
-    assert(q.a < 0.71 && q.a > 0.7);
-    assert(q.b < 0.71 && q.a > 0.7);
+    assert(NearEqual(q.a, 0.70, 0.01));
+    assert(NearEqual(q.b, 0.70, 0.01));
     assert(q.c == 0);
     assert(q.d == 0);
 
@@ -43,11 +43,19 @@ void test_basic_quaternion_from_eulers(void) {
     eulers.b = PI_DIV_2;
     QuaternionFromEulers(&eulers, &q);
     QuaternionPrint(&q);
+    assert(NearEqual(q.a, 0.70, 0.01));
+    assert(q.b == 0);
+    assert(NearEqual(q.c, 0.70, 0.01));
+    assert(q.d == 0);
 
     eulers.b = 0;
     eulers.c = PI_DIV_2;
     QuaternionFromEulers(&eulers, &q);
     QuaternionPrint(&q);
+    assert(NearEqual(q.a, 0.70, 0.01));
+    assert(q.b == 0);
+    assert(q.c == 0);
+    assert(NearEqual(q.d, 0.70, 0.01));
 }
 
 void test_basic_quaternion_to_eulers(void) {
@@ -56,26 +64,41 @@ void test_basic_quaternion_to_eulers(void) {
 
     QuaternionToEulers(&q, &eulers);
     Vector3fPrint(&eulers);
+    assert(eulers.a == 0);
+    assert(eulers.b == 0);
+    assert(eulers.c == 0);
 
     q.a = -0.0;
     q.b = 1.0;
     QuaternionToEulers(&q, &eulers);
     Vector3fPrint(&eulers);
+    assert(NearEqual(eulers.a, PI, 0.001));
+    assert(eulers.b == 0);
+    assert(eulers.c == 0);
 
     q.a = 0.707141;
     q.b = 0.7073;
     QuaternionToEulers(&q, &eulers);
     Vector3fPrint(&eulers);
+    assert(NearEqual(eulers.a, PI_DIV_2, 0.001));
+    assert(eulers.b == 0);
+    assert(eulers.c == 0);
 
     q.c = q.b;
     q.b = 0;
     QuaternionToEulers(&q, &eulers);
     Vector3fPrint(&eulers);
+    assert(eulers.a == 0);
+    assert(NearEqual(eulers.b, PI_DIV_2, 0.001));
+    assert(eulers.c == 0);
 
     q.d = q.c;
     q.c = 0;
     QuaternionToEulers(&q, &eulers);
     Vector3fPrint(&eulers);
+    assert(eulers.a == 0);
+    assert(eulers.b == 0);
+    assert(NearEqual(eulers.c, PI_DIV_2, 0.001));
 }
 
 int main(int argc, char **argv) {
