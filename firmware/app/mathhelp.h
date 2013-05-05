@@ -1,8 +1,8 @@
 #ifndef MATH_TYPES_H
 #define MATH_TYPES_H
 
-#define PI 3.14159265
-#define PI_DIV_2 1.5707
+#define PI 3.141592653589793238462643383
+#define PI_DIV_2 1.5707963267948966
 
 typedef struct Vector3F {
     float a, b, c;
