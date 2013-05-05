@@ -20,13 +20,3 @@ int Vector3FEqual(const Vector3F *a, const Vector3F *b) {
 int Vector4FEqual(const Vector4F *a, const Vector4F *b) {
     return a->a == b->a && a->b == b->b && a->c == b->c && a->d == b->d;
 }
-
-// The well known 1/sqrt approximation
-float ReciprocalSqrt(float x) {
-    float xhalf = 0.5f * x;
-    int i = *(int*)&x;
-    i = 0x5f3759df - (i >> 1);
-    x = *(float*)&i;
-    x = x*(1.5f-(xhalf*x*x));
-    return x;
-}

@@ -7,7 +7,8 @@ void QuaternionNormalize(Quaternion *q) {
     if(n == 1)
         return;
 
-    n = ReciprocalSqrt(n);
+    // TODO This could be made faster
+    n = 1 / sqrt(n);
     q->a *= n;
     q->b *= n;
     q->c *= n;
