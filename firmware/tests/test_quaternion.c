@@ -101,10 +101,41 @@ void test_basic_quaternion_to_eulers(void) {
     assert(NearEqual(eulers.c, PI_DIV_2, 0.001));
 }
 
+void test_basic_quaternion_multiply(void) {
+    Quaternion q = { 1, 0, 0, 0 };
+    Quaternion r = { 1, 0, 0, 0 };
+    Quaternion t;
+    Vector3F eulers;
+
+    QuaternionMultiply(&q, &r, &t);
+    QuaternionPrint(&t);
+    assert(t.a == 1);
+    assert(t.b == 0);
+    assert(t.c == 0);
+    assert(t.d == 0);
+
+    q.a = 0.707107;
+    q.b = 0.707107;
+    QuaternionMultiply(&q, &r, &t);
+    QuaternionPrint(&t);
+    QuaternionToEulers(&t, &eulers);
+    assert(NearEqual(eulers.a, PI_DIV_2, 0.001));
+    assert(eulers.b == 0);
+    assert(eulers.c == 0);
+
+    QuaternionMultiply(&q, &q, &t);
+    QuaternionPrint(&t);
+    QuaternionToEulers(&t, &eulers);
+    assert(NearEqual(eulers.a, PI, 0.001));
+    assert(eulers.b == 0);
+    assert(eulers.c == 0);
+}
+
 int main(int argc, char **argv) {
     TestInfo tests[] = {
         { "Basic quaternion from eulers", test_basic_quaternion_from_eulers },
         { "Basic quaternion to eulers", test_basic_quaternion_to_eulers },
+        { "Basic quaternion multiplication", test_basic_quaternion_multiply },
         { 0, 0 }
     };
 
