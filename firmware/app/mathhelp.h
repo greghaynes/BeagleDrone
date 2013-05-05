@@ -18,5 +18,7 @@ void Vector4FZero(Vector4F *v);
 int Vector3FEqual(const Vector3F *a, const Vector3F *b);
 int Vector4FEqual(const Vector4F *a, const Vector4F *b);
 
+float ReciprocalSqrt(float x);
+
 #endif
 
