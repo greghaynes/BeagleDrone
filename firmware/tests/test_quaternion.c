@@ -25,6 +25,14 @@ void test_basic_quaternion_from_eulers(void) {
     assert(q.b < 1.0001 && q.b > .9999);
     assert(q.c < .0001 && q.c > -.0001);
     assert(q.c < .0001 && q.c > -.0001);
+
+    eulers.a = 1.5707;
+    QuaternionFromEulers(&eulers, &q);
+    QuaternionPrint(&q);
+    assert(q.a < 0.71 && q.a > 0.7);
+    assert(q.b < 0.71 && q.a > 0.7);
+    assert(q.c == 0);
+    assert(q.d == 0);
 }
 
 int main(int argc, char **argv) {
