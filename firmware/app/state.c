@@ -1,4 +1,4 @@
-#include "mathtypes.h"
+#include "mathhelp.h"
 #include "state.h"
 
 /*! \brief Update state from angular velocity */

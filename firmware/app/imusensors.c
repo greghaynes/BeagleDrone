@@ -2,7 +2,7 @@
 #include "kernel/drivers/hsi2c.h"
 #include "kernel/interrupt.h"
 #include "kernel/beaglebone.h"
-#include "app/mathtypes.h"
+#include "app/mathhelp.h"
 #include "imusensors.h"
 
 #define GYRO_I2C_WRITE_ADDR 0xD0

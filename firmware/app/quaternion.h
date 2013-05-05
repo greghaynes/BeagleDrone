@@ -1,7 +1,7 @@
 #ifndef QUATERNION_H
 #define QUATERNION_H
 
-#include "mathtypes.h"
+#include "mathhelp.h"
 
 typedef Vector4F Quaternion;
 
