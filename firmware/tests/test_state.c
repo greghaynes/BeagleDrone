@@ -2,6 +2,7 @@
 #include "app/state.h"
 
 #include <stdio.h>
+#include <assert.h>
 
 void StatePrint(const State *state) {
     const Quaternion *q = &state->r_b_to_i;
@@ -25,6 +26,11 @@ void test_basic_state_angvel_update(void) {
     }
 
     StatePrint(&s);
+    Vector3F eulers;
+    QuaternionToEulers(&s.r_b_to_i, &eulers);
+    assert(NearEqual(eulers.a, 0.1, 0.001));
+    assert(eulers.b == 0);
+    assert(eulers.c == 0);
 }
 
 int main(int argc, char **argv) {
