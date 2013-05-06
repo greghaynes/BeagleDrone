@@ -18,11 +18,12 @@ void StateUpdateFromAngVel(State *state,
     QuaternionFromEulers(&delta_eulers, &delta_quat);
 
     // Update our rotational state
-    QuaternionMultiply(&delta_quat, rot_quat, rot_quat);
+    QuaternionMultiply(rot_quat, &delta_quat, rot_quat);
+    QuaternionNormalize(rot_quat);
 }
 
 void StateInit(State *s) {
-    Vector4FZero(&s->r_b_to_i);
+    QuaternionZero(&s->r_b_to_i);
     Vector3FZero((Vector3F*)&s->rot_eulers);
 }
 

@@ -2,6 +2,13 @@
 
 #include "quaternion.h"
 
+void QuaternionZero(Quaternion *q) {
+    q->a = 1;
+    q->b = 0;
+    q->c = 0;
+    q->d = 0;
+}
+
 void QuaternionNormalize(Quaternion *q) {
     float n = q->a*q->a + q->b*q->b + q->c*q->c + q->d*q->d;
     if(n == 1)

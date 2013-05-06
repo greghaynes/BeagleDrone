@@ -50,11 +50,11 @@ boot.bin: $(OBJS)
 	$(ARMGNU_PREFIX)-objcopy boot.elf -O binary boot.bin
 
 test_state:
-	gcc -lm -I. app/mathhelp.c app/quaternion.c app/state.c tests/test_help.c tests/test_state.c -o tests/test_state
+	gcc -g -lm -I. app/mathhelp.c app/quaternion.c app/state.c tests/test_help.c tests/test_state.c -o tests/test_state
 	./tests/test_state
 
 test_quaternion:
-	gcc -lm -I. app/mathhelp.c app/quaternion.c tests/test_help.c tests/test_quaternion.c -o tests/test_quaternion
+	gcc -g -lm -I. app/mathhelp.c app/quaternion.c tests/test_help.c tests/test_quaternion.c -o tests/test_quaternion
 	./tests/test_quaternion
 
 clean:

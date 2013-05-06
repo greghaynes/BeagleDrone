@@ -5,6 +5,7 @@
 
 typedef Vector4F Quaternion;
 
+void QuaternionZero(Quaternion *q);
 void QuaternionFromEulers(const Vector3F *eulers, Quaternion *q);
 void QuaternionToEulers(const Quaternion *q, Vector3F *dest);
 void QuaternionMultiply(const Quaternion *q,
