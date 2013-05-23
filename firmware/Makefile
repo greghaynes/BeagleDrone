@@ -49,6 +49,8 @@ boot.bin: $(OBJS)
 	$(ARMGNU_PREFIX)-objcopy boot.elf -O srec boot.srec
 	$(ARMGNU_PREFIX)-objcopy boot.elf -O binary boot.bin
 
+test: test_state test_quaternion
+
 test_state:
 	gcc -g -lm -I. app/mathhelp.c app/quaternion.c app/state.c tests/test_help.c tests/test_state.c -o tests/test_state
 	./tests/test_state
