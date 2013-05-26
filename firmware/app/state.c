@@ -9,11 +9,22 @@ void StateSetSetpoint(State *state,
 void StateUpdateError(State *state,
                       const Quaternion *error,
                       float time_delta) {
-    Quaternion q_dt;
+    Quaternion err_delta, q_dt;
+    QuaternionCopy(&state->error_p, &err_delta);
+    QuaternionZero(&q_dt);
+
+    // Set error_p
     QuaternionCopy(error, &state->error_p);
 
+    // Calculate error_d
+    QuaternionInvert(&err_delta);
+    QuaternionMultiply(error, &err_delta, &err_delta);
+    // TODO LERP
+
     // This only works for small values of error!
-    QuaternionCopy(error, &q_dt);
+    QuaternionLerp(error, &q_dt, time_delta, &q_dt);
+    QuaternionMultiply(&q_dt, &state->error_i, &state->error_i);
+    // TODO LERP
 }
 
 void StateUpdateRotFromAngVel(State *state,

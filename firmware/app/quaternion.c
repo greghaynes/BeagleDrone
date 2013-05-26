@@ -26,6 +26,17 @@ void QuaternionNormalize(Quaternion *q) {
     q->d *= n;
 }
 
+void QuaternionConjugate(Quaternion *q) {
+    q->b = -q->b;
+    q->c = -q->c;
+    q->d = -q->d;
+}
+
+void QuaternionInvert(Quaternion *q) {
+    QuaternionConjugate(q);
+    Vector4FScale(q, 1 / Vector4FLengthSquared(q), q);
+}
+
 void QuaternionFromEulers(const Vector3F *eulers, Quaternion *q) {
     float r_2 = eulers->a / 2;
     float p_2 = eulers->b / 2;

@@ -20,6 +20,11 @@ void Vector4FCopy(const Vector4F *src, Vector4F *dest) {
     dest->d = src->d;
 }
 
+float Vector4FLengthSquared(const Vector4F *v) {
+    return (v->a * v->a) + (v->b * v->b) +
+           (v->c * v->c) + (v->d * v->d);
+}
+
 void Vector4FScale(const Vector4F *v, float c, Vector4F *dest) {
     dest->a = v->a * c;
     dest->b = v->b * c;

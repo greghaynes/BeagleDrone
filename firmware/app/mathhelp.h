@@ -17,6 +17,8 @@ void Vector4FZero(Vector4F *v);
 
 void Vector4FCopy(const Vector4F *src, Vector4F *dest);
 
+float Vector4FLengthSquared(const Vector4F *v);
+
 void Vector4FScale(const Vector4F *v, float c, Vector4F *dest);
 
 void Vector4FAdd(const Vector4F *a, const Vector4F *b, Vector4F *dest);
