@@ -15,10 +15,20 @@ typedef struct Vector4F {
 void Vector3FZero(Vector3F *v);
 void Vector4FZero(Vector4F *v);
 
+void Vector4FCopy(const Vector4F *src, Vector4F *dest);
+
+void Vector4FScale(const Vector4F *v, float c, Vector4F *dest);
+
+void Vector4FAdd(const Vector4F *a, const Vector4F *b, Vector4F *dest);
+
 int Vector3FEqual(const Vector3F *a, const Vector3F *b);
 int Vector4FEqual(const Vector4F *a, const Vector4F *b);
 
 int NearEqual(float a, float b, float error);
+
+void MatrixMultiply3x3_4(const Vector3F *a,
+                         const Vector4F *b,
+                         Vector4F *dest);
 
 #endif
 

@@ -9,6 +9,10 @@ void QuaternionZero(Quaternion *q) {
     q->d = 0;
 }
 
+void QuaternionCopy(const Quaternion *src, Quaternion *dest) {
+    Vector4FCopy(src, dest);
+}
+
 void QuaternionNormalize(Quaternion *q) {
     float n = q->a*q->a + q->b*q->b + q->c*q->c + q->d*q->d;
     if(n == 1)
@@ -80,4 +84,20 @@ void QuaternionMultiply(const Quaternion *q,
     t->b = (r->a * q->b) + (r->b * q->a) - (r->c * q->d) + (r->d * q->c);
     t->c = (r->a * q->c) + (r->b * q->d) + (r->c * q->a) - (r->d * q->b);
     t->d = (r->a * q->d) - (r->b * q->c) + (r->c * q->b) + (r->d * q->a);
+}
+
+float QuaternionDotProduct(const Quaternion *a,
+                           const Quaternion *b) {
+    return (a->a * b->a) + (a->b * b->b) + (a->c * b->c) + (a->d * b->d);
+}
+
+void QuaternionLerp(const Quaternion *a,
+                     const Quaternion *b,
+                     float t,
+                     Quaternion *dest) {
+    Quaternion tmp;
+    Vector4FScale(a, 1-t, dest);
+    Vector4FScale(b, t, &tmp);
+    Vector4FAdd(dest, &tmp, dest);
+    QuaternionNormalize(dest);
 }

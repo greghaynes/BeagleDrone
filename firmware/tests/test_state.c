@@ -15,7 +15,7 @@ void StatePrint(const State *state) {
             eulers.a, eulers.b, eulers.c);
 }
 
-void test_single_axis_basic_angvel_update(void) {
+void test_single_axis_basic_rot_angvel_update(void) {
     State s;
     StateInit(&s);
     StatePrint(&s);
@@ -23,7 +23,7 @@ void test_single_axis_basic_angvel_update(void) {
     int i;
     StateRotationalFloat ang_vel = { 1, 0, 0 };
     for(i = 0;i < 100;i++) {
-        StateUpdateFromAngVel(&s, &ang_vel, .001);
+        StateUpdateRotFromAngVel(&s, &ang_vel, .001);
     }
 
     StatePrint(&s);
@@ -34,7 +34,7 @@ void test_single_axis_basic_angvel_update(void) {
     assert(eulers.c == 0);
 }
 
-void test_single_axis_large_angvel_update(void) {
+void test_single_axis_large_rot_angvel_update(void) {
     State s;
     StateInit(&s);
     StatePrint(&s);
@@ -42,7 +42,7 @@ void test_single_axis_large_angvel_update(void) {
     int i;
     StateRotationalFloat ang_vel = { 1, 0, 0 };
     for(i = 0;i < 314159;i++) {
-        StateUpdateFromAngVel(&s, &ang_vel, .001);
+        StateUpdateRotFromAngVel(&s, &ang_vel, .001);
     }
 
     StatePrint(&s);
@@ -52,8 +52,9 @@ void test_single_axis_large_angvel_update(void) {
 
 int main(int argc, char **argv) {
     TestInfo tests[] = {
-        { "Basic state updating", test_single_axis_basic_angvel_update },
-        { "Single axis large rotation", test_single_axis_large_angvel_update },
+        { "Basic state updating", test_single_axis_basic_rot_angvel_update },
+        { "Single axis large rotation",
+            test_single_axis_large_rot_angvel_update },
         { 0, 0 }
     };
 

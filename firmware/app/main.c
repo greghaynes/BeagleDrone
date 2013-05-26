@@ -3,7 +3,7 @@
 #include "kernel/sysdelay.h"
 #include "app/communication.h"
 #include "app/log.h"
-#include "app/motors.h"
+#include "app/motorcontrol.h"
 #include "app/imusensors.h"
 
 int main() {
@@ -20,7 +20,7 @@ int main() {
     IntAINTCInit();
 
     // Init motors
-    MotorsInit();
+    MotorControlInit();
 
     // Init IMU Sensors
     IMUSensorsInit();

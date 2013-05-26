@@ -1,10 +1,24 @@
 #include "mathhelp.h"
 #include "state.h"
 
-/*! \brief Update state from angular velocity */
-void StateUpdateFromAngVel(State *state,
-                           const StateRotationalFloat *ang_vel,
-                           float time_delta) {
+void StateSetSetpoint(State *state,
+                      const Vector3F *eulers) {
+    QuaternionFromEulers(eulers, &state->setpoint);
+}
+
+void StateUpdateError(State *state,
+                      const Quaternion *error,
+                      float time_delta) {
+    Quaternion q_dt;
+    QuaternionCopy(error, &state->error_p);
+
+    // This only works for small values of error!
+    QuaternionCopy(error, &q_dt);
+}
+
+void StateUpdateRotFromAngVel(State *state,
+                              const StateRotationalFloat *ang_vel,
+                              float time_delta) {
     Quaternion *rot_quat = &state->r_b_to_i;
 
     // We are going to just scale each euler angle independently
@@ -22,8 +36,19 @@ void StateUpdateFromAngVel(State *state,
     QuaternionNormalize(rot_quat);
 }
 
+/*! \brief Update state from angular velocity */
+void StateUpdateFromAngVel(State *state,
+                           const StateRotationalFloat *ang_vel,
+                           float time_delta) {
+    StateUpdateRotFromAngVel(state, ang_vel, time_delta);
+}
+
 void StateInit(State *s) {
     QuaternionZero(&s->r_b_to_i);
+    QuaternionZero(&s->setpoint);
+    QuaternionZero(&s->error_p);
+    QuaternionZero(&s->error_i);
+    QuaternionZero(&s->error_d);
     Vector3FZero((Vector3F*)&s->rot_eulers);
 }
 

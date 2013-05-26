@@ -29,7 +29,8 @@ OBJS=kernel/boot/startup.o\
 	app/communication.o\
 	app/command.o\
 	app/log.o\
-	app/motors.o\
+	app/motorcontrol.o\
+	app/motorstate.o\
 	app/imusensors.o\
 	app/state.o\
 	app/quaternion.o\
