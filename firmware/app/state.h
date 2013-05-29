@@ -17,7 +17,6 @@ typedef struct StateRotationalShort {
 
 typedef struct State {
     Quaternion r_b_to_i;
-    StateRotationalFloat rot_eulers;
 
     Quaternion setpoint;
     Quaternion error_p;

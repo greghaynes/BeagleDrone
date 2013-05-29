@@ -61,6 +61,5 @@ void StateInit(State *s) {
     QuaternionZero(&s->error_p);
     QuaternionZero(&s->error_i);
     QuaternionZero(&s->error_d);
-    Vector3FZero((Vector3F*)&s->rot_eulers);
 }
 
