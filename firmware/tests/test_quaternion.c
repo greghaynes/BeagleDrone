@@ -131,11 +131,34 @@ void test_basic_quaternion_multiply(void) {
     assert(eulers.c == 0);
 }
 
+void test_quaternion_difference(void) {
+    Quaternion a, b, c;
+    Vector3F eulers;
+
+    eulers.a = 1;
+    eulers.b = 0;
+    eulers.c = 0;
+    QuaternionFromEulers(&eulers, &a);
+
+    eulers.a = .5;
+    eulers.b = 0;
+    eulers.c = 0;
+    QuaternionFromEulers(&eulers, &b);
+
+    QuaternionDifference(&a, &b, &c);
+    QuaternionToEulers(&c, &eulers);
+    Vector3fPrint(&eulers);
+    assert(NearEqual(eulers.a, 0.5, 0.001));
+    assert(eulers.b == 0);
+    assert(eulers.c == 0);
+}
+
 int main(int argc, char **argv) {
     TestInfo tests[] = {
         { "Basic quaternion from eulers", test_basic_quaternion_from_eulers },
         { "Basic quaternion to eulers", test_basic_quaternion_to_eulers },
         { "Basic quaternion multiplication", test_basic_quaternion_multiply },
+        { "Quaternion difference", test_quaternion_difference },
         { 0, 0 }
     };
 

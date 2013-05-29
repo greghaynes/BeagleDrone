@@ -97,6 +97,15 @@ void QuaternionMultiply(const Quaternion *q,
     t->d = (r->a * q->d) - (r->b * q->c) + (r->c * q->b) + (r->d * q->a);
 }
 
+void QuaternionDifference(const Quaternion *a,
+                          const Quaternion *b,
+                          Quaternion *dest) {
+    Quaternion tmp;
+    QuaternionCopy(b, &tmp);
+    QuaternionInvert(&tmp);
+    QuaternionMultiply(a, &tmp, dest);
+}
+
 float QuaternionDotProduct(const Quaternion *a,
                            const Quaternion *b) {
     return (a->a * b->a) + (a->b * b->b) + (a->c * b->c) + (a->d * b->d);
