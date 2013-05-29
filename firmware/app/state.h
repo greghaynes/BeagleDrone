@@ -28,6 +28,10 @@ typedef struct State {
 void StateSetSetpoint(State *state,
                       const Vector3F *eulers);
 
+void StateUpdateError(State *state,
+                      const Quaternion *error,
+                      float time_delta);
+
 /* Updates the rotational state given an angular velocity and time. */
 void StateUpdateRotFromAngVel(State *state,
                               const StateRotationalFloat *ang_vel,

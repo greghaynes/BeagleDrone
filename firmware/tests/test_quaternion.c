@@ -162,6 +162,10 @@ void test_quaternion_lerp(void) {
     QuaternionLerp(&a, &b, .2, &c);
     QuaternionToEulers(&c, &eulers);
     Vector3fPrint(&eulers);
+
+    assert(NearEqual(eulers.a, 0.02, 0.001));
+    assert(eulers.b == 0);
+    assert(eulers.c == 0);
 }
 
 int main(int argc, char **argv) {
