@@ -91,6 +91,16 @@ void QuaternionToEulers(const Quaternion *q, Vector3F *dest) {
 void QuaternionMultiply(const Quaternion *q,
                         const Quaternion *r,
                         Quaternion *t) {
+    if(q == t) {
+        Quaternion q_tmp;
+        QuaternionCopy(q, &q_tmp);
+        q = &q_tmp;
+    }
+    if(r == t) {
+        Quaternion r_tmp;
+        QuaternionCopy(r, &r_tmp);
+        r = &r_tmp;
+    }
     t->a = (r->a * q->a) - (r->b * q->b) - (r->c * q->c) - (r->d * q->d);
     t->b = (r->a * q->b) + (r->b * q->a) - (r->c * q->d) + (r->d * q->c);
     t->c = (r->a * q->c) + (r->b * q->d) + (r->c * q->a) - (r->d * q->b);
