@@ -113,6 +113,7 @@ void StateUpdateFromAngVel(State *state,
     StateUpdateRotFromAngVel(state, ang_vel, time_delta);
     QuaternionDifference(&state->r_b_to_i, &state->setpoint, &error);
     StateUpdateError(state, &error, time_delta);
+    StateUpdateMotors(state);
 }
 
 void StateInit(State *s) {

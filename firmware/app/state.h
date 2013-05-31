@@ -45,6 +45,10 @@ void StateUpdateMotors(State *state);
 /* Equivilent to calling these functions, in this order:
  *  StateUpdateRotFromAngVel
  *  StateUpdateError
+ *  StateUpdateMotors
+ *
+ *  This is useful for testing but typically the error and motors are not
+ *  updated at the same rate as rotational state.
  */
 void StateUpdateFromAngVel(State *state,
                            const StateRotationalFloat *ang_vel,
