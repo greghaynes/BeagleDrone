@@ -78,6 +78,7 @@ void test_multi_axis_basic_rot_angvel_update(void) {
     }
 
     StatePrint(&s);
+    //TODO:GAH what vals do we expect?
 }
 
 void test_error_update(void) {
@@ -89,7 +90,20 @@ void test_error_update(void) {
 
     StateUpdateError(&s, &error, .001);
     StateErrorPrint(&s);
+    QuaternionToEulers(&s.error_p, &eulers);
+    assert(NearEqual(eulers.a, 0.001, .0001));
+    QuaternionToEulers(&s.error_i, &eulers);
+    assert(NearEqual(eulers.a, 0.001, .0001));
+    QuaternionToEulers(&s.error_d, &eulers);
+    assert(NearEqual(eulers.a, 1, 0.1));
+
     StateUpdateError(&s, &error, .001);
+    QuaternionToEulers(&s.error_p, &eulers);
+    assert(NearEqual(eulers.a, 0.001, .0001));
+    QuaternionToEulers(&s.error_i, &eulers);
+    assert(NearEqual(eulers.a, 0.002, .0001));
+    QuaternionToEulers(&s.error_d, &eulers);
+    assert(NearEqual(eulers.a, 0, 0.001));
     StateErrorPrint(&s);
 }
 
