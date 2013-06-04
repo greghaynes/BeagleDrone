@@ -1,5 +1,9 @@
 PROJECT(beagledrone-gui)
 
+SET(CPP_SRCS
+    main.cpp
+    mainwindow.cpp)
+
 SET(UI_SRCS
     ui/joysticksdialog.ui
     ui/mainwindow.ui)
@@ -11,7 +15,6 @@ find_package(Qt5Widgets REQUIRED)
 
 qt5_wrap_ui(UI_HDRS ${UI_SRCS})
 
-add_executable(beagledrone-gui main.cpp ${UI_HDRS})
+add_executable(beagledrone-gui ${CPP_SRCS} ${UI_HDRS})
 
-target_link_libraries(beagledrone-gui Qt5::Widgets)
-
+qt5_use_modules(beagledrone-gui Widgets)
