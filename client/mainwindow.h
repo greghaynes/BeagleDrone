@@ -16,7 +16,13 @@ class MainWindow : public QMainWindow
         explicit MainWindow(QWidget *parent = 0);
         ~MainWindow();
 
+
+    private Q_SLOTS:
+        void configureJoysticksTriggered();
+
     private:
+        void setupActions();
+
         Ui::MainWindow *ui;
 };
 
