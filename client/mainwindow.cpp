@@ -22,7 +22,9 @@ MainWindow::~MainWindow()
 void MainWindow::configureJoysticksTriggered()
 {
     JoysticksDialog *j = new JoysticksDialog(this);
-    j->show();
+    if(j->exec()) {
+
+    }
 }
 
 void MainWindow::setupActions()

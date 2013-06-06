@@ -7,6 +7,7 @@ SET(CPP_SRCS
 
 SET(UI_SRCS
     ui/joysticksdialog.ui
+    ui/joystickeditdialog.ui
     ui/mainwindow.ui)
 
 set(CMAKE_AUTOMOC ON)

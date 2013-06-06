@@ -15,10 +15,17 @@ class JoysticksDialog : public QDialog
     public:
         JoysticksDialog(QWidget *parent = 0);
         ~JoysticksDialog();
+    
+    private Q_SLOTS:
+        void joysticksSeclectionChanged();
+        void editJoystick();
 
     private:
+        void setupActions();
+
         Ui::JoysticksDialog *ui;
 
 };
 
 #endif
+
