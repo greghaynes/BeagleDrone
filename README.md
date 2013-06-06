@@ -1,8 +1,7 @@
 # BeagleDrone
 ==============
 
-A barebone C OS for the beaglebone
-
+An Open Source drone based on the BeagleBone.
 
 ## Why
 
