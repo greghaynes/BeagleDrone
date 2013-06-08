@@ -23,13 +23,13 @@ class JoystickEditDialog : public QDialog
 class JoystickListItem : public QListWidgetItem
 {
     public:
-        JoystickListItem(const QString &text,
-                         const QString &path,
+        JoystickListItem(const QString &path,
                          QListWidget *parent = 0);
 
         QString path() const;
 
     private:
+        QString m_name;
         QString m_path;
 };
 
@@ -55,10 +55,9 @@ void JoystickEditDialog::setPath(const QString &path)
     //TODO
 }
 
-JoystickListItem::JoystickListItem(const QString &text,
-                                   const QString &path,
+JoystickListItem::JoystickListItem(const QString &path,
                                    QListWidget *parent) :
-    QListWidgetItem(text, parent),
+    QListWidgetItem(path, parent),
     m_path(path)
 {
 }
@@ -78,7 +77,6 @@ JoysticksDialog::JoysticksDialog(QWidget *parent) :
 
     JoystickListItem *new_joystick;
     new_joystick = new JoystickListItem("New Joystick",
-                                        QString(),
                                         ui->joysticksListWidget);
 
     setupActions();
