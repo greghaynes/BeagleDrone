@@ -3,7 +3,8 @@ PROJECT(beagledrone-gui)
 SET(CPP_SRCS
     main.cpp
     mainwindow.cpp
-    joysticksdialog.cpp)
+    joysticksdialog.cpp
+    gimbalwidget.cpp)
 
 SET(UI_SRCS
     ui/joysticksdialog.ui
