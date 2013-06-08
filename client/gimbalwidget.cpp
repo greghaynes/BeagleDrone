@@ -20,6 +20,7 @@ GimbalWidget::GimbalWidget(QWidget *parent) :
     QWidget(parent),
     d_ptr(new GimbalWidgetPrivate(this))
 {
+    setWindowTitle("Gimbal");
     setConstants();
 }
 

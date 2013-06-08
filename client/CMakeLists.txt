@@ -1,15 +1,17 @@
 PROJECT(beagledrone-gui)
 
 SET(CPP_SRCS
+    gimbalwidget.cpp
+    joysticksdialog.cpp
     main.cpp
     mainwindow.cpp
-    joysticksdialog.cpp
-    gimbalwidget.cpp)
+    motorswidget.cpp)
 
 SET(UI_SRCS
     ui/joysticksdialog.ui
     ui/joystickeditdialog.ui
-    ui/mainwindow.ui)
+    ui/mainwindow.ui
+    ui/motorswidget.ui)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

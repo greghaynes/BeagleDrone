@@ -32,3 +32,4 @@ void MainWindow::setupActions()
     connect(ui->actionSelectJoystick, &QAction::triggered,
             this, &MainWindow::configureJoysticksTriggered);
 }
+
