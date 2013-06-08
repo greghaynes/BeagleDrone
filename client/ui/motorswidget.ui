@@ -28,6 +28,9 @@
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
+       <property name="tickPosition">
+        <enum>QSlider::TicksAbove</enum>
+       </property>
       </widget>
      </item>
     </layout>
@@ -45,6 +48,9 @@
       <widget class="QSlider" name="bSlider">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
+       </property>
+       <property name="tickPosition">
+        <enum>QSlider::TicksAbove</enum>
        </property>
       </widget>
      </item>
@@ -64,6 +70,9 @@
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
+       <property name="tickPosition">
+        <enum>QSlider::TicksAbove</enum>
+       </property>
       </widget>
      </item>
     </layout>
@@ -81,6 +90,9 @@
       <widget class="QSlider" name="dSlider">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
+       </property>
+       <property name="tickPosition">
+        <enum>QSlider::TicksAbove</enum>
        </property>
       </widget>
      </item>
