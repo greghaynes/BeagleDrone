@@ -19,6 +19,9 @@ of RAM and plenty of peripherals. This allows for modern state estimation and
 other algorithms to be used without the need for a second computer, or second
 code base.
 
+# Firmware
+
+The firmware directory contains the code which runs on the beagleboard.
 
 ## Dependencies
 
@@ -61,3 +64,16 @@ Run the command
 
 `make test`
 
+# Client
+
+The client is run on a PC and can be used to communicated with the drone.
+
+## Dependencies
+
+Qt5, g++ and CMake are required to build and run the client;
+
+## Building
+
+To build the client run the following commands
+
+`cd client; cmake .; make`
