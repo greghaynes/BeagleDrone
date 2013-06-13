@@ -14,6 +14,10 @@ struct GimbalWidgetPrivate
     int pitch_marker_cnt;
     int pitch_marker_width;
     int pitch_marker_deg;
+    float yaw_marker_padding;
+    int yaw_marker_cnt;
+    int yaw_marker_width;
+    int yaw_marker_deg;
 };
 
 GimbalWidget::GimbalWidget(QWidget *parent) :
@@ -43,6 +47,7 @@ void GimbalWidget::setConstants()
     d->pitch_marker_cnt = 4;
     d->pitch_marker_width = 10;
     d->pitch_marker_deg = 10;
+    d->yaw_marker_padding = .1;
 }
 
 void GimbalWidget::drawPitchMarkers(QPainter &painter)
@@ -69,6 +74,12 @@ void GimbalWidget::drawPitchMarkers(QPainter &painter)
             painter.setPen(Qt::white);
         cur_deg += d_ptr->pitch_marker_deg;
     }
+}
+
+void GimbalWidget::drawYawMarkers(QPainter &painter)
+{
+    int offset = width() * d_ptr->yaw_marker_padding;
+
 }
 
 void GimbalWidget::drawHorizon(QPainter &painter)

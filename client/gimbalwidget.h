@@ -21,6 +21,7 @@ class GimbalWidget : public QWidget
     private:
         void setConstants();
         void drawPitchMarkers(QPainter &painter);
+        void drawYawMarkers(QPainter &painter);
         void drawHorizon(QPainter &painter);
 
         GimbalWidgetPrivate *d_ptr;
