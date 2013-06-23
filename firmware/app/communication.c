@@ -93,7 +93,7 @@ void CommunicationCheckRead(void) {
 }
 
 void CommunicationCheck(void) {
-    //CommunicationCheckRead();
+    CommunicationCheckRead();
     CommunicationCheckWrite();
 }
 

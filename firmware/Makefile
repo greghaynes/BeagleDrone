@@ -49,7 +49,7 @@ boot.bin: $(OBJS)
 	$(ARMGNU_PREFIX)-objcopy boot.elf -O srec boot.srec
 	$(ARMGNU_PREFIX)-objcopy boot.elf -O binary boot.bin
 
-test: test_state test_quaternion
+test: test_state test_quaternion test_communication
 
 test_state:
 	gcc -Wall -g -lm -I. app/mathhelp.c app/quaternion.c app/state.c tests/test_help.c tests/test_state.c -o tests/test_state
@@ -58,6 +58,10 @@ test_state:
 test_quaternion:
 	gcc -g -lm -I. app/mathhelp.c app/quaternion.c tests/test_help.c tests/test_quaternion.c -o tests/test_quaternion
 	./tests/test_quaternion
+
+test_communication:
+	gcc -g -lm -I. app/afproto.c app/crc16.c app/communication.c tests/test_help.c tests/test_communication.c -o tests/test_communication
+	./tests/test_communication
 
 clean:
 	rm $(OBJS) boot.elf boot.srec boot.bin
