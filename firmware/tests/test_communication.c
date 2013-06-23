@@ -1,3 +1,6 @@
+typedef struct state {
+} state_t;
+
 void UARTConsoleInit(void) {
 }
 

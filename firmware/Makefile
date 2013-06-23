@@ -26,6 +26,7 @@ OBJS=kernel/boot/startup.o\
 	utils/delay.o\
 	app/crc16.o\
 	app/afproto.o\
+	app/buffer.o\
 	app/communication.o\
 	app/command.o\
 	app/log.o\

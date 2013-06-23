@@ -3,25 +3,23 @@
 #include "utils/uartConsole.h"
 #include "utils/uartStdio.h"
 #include "app/afproto.h"
+#include "app/buffer.h"
 #include "app/crc16.h"
 #include "app/log.h"
 #include "communication.h"
 
 #include <string.h>
 
-static char uart_in_buff[COMMUNICATION_UART_IN_BUFF_SIZE];
-static unsigned int uart_in_buff_used;
-static char deframed_buff[COMMUNICATION_UART_IN_BUFF_SIZE];
-static unsigned int deframed_buff_size;
+static char uart_in_data[COMMUNICATION_UART_IN_BUFF_SIZE];
+static RingBuffer uart_in_ringbuffer;
+static char deframed_data[COMMUNICATION_UART_IN_BUFF_SIZE];
+static Buffer deframed_buffer;
 
-static char uart_out_buff[COMMUNICATION_UART_OUT_BUFF_SIZE];
-static unsigned int uart_out_buff_end;
-static unsigned int uart_out_buff_start;
+static char uart_out_data[COMMUNICATION_UART_OUT_BUFF_SIZE];
+static RingBuffer uart_out_ringbuffer;
 
 void CommunicationCheckForFrame(void) {
-    unsigned int ret_size;
-    unsigned int ret;
-
+    /* TODO: Fix aproto to work with ringbuffer
     if((ret = afproto_get_data(uart_in_buff, uart_in_buff_used,
                      deframed_buff, &ret_size)) >= 0) {
         uart_in_buff_used -= ret;
@@ -31,7 +29,7 @@ void CommunicationCheckForFrame(void) {
         uart_in_buff_used -= ret_size;
         memcpy(uart_in_buff, uart_in_buff + ret_size, uart_in_buff_used);
         deframed_buff_size = 0;
-    }
+    } */
 }
 
 void CommunicationCheckWrite(void) {
@@ -39,7 +37,8 @@ void CommunicationCheckWrite(void) {
     UARTprintf("Write called, start: %u, end: %u\n", uart_out_buff_start, uart_out_buff_end);
 #endif
 
-    while(uart_out_buff_start != uart_out_buff_end) {
+    char ch;
+    while(RingBufferPeek(&uart_out_ringbuffer, &ch)) {
 #ifdef DEBUG_UART
         UARTPuts("Write loop, Out buff: ", 22);
         int i;
@@ -49,22 +48,17 @@ void CommunicationCheckWrite(void) {
 #endif
 
         // Try to put byte in transmit buffer
-        if(UARTCharPutNonBlocking(UART_CONSOLE_BASE,
-                                  uart_out_buff[uart_out_buff_start])) {
+        if(UARTCharPutNonBlocking(UART_CONSOLE_BASE, ch)) {
+            RingBufferPop(&uart_out_ringbuffer, 0);
 #ifdef DEBUG_UART
             UARTprintf("Char written, start at %u\n", uart_out_buff_start);
 #endif
-            uart_out_buff_start++;
         } else {
 #ifdef DEBUG_UART
             UARTPuts("THR full, returning write\n\n", 26);
             return;
 #endif
         }
-
-        // Handle buffer wrapping
-        if(uart_out_buff_start >= COMMUNICATION_UART_OUT_BUFF_SIZE)
-            uart_out_buff_start = 0;
     }
 
 #ifdef DEBUG_UART
@@ -83,7 +77,7 @@ void CommunicationCheckRead(void) {
             return;
         }
 
-        uart_in_buff[uart_in_buff_used++] = in_char;
+        RingBufferPush(&uart_in_ringbuffer, in_char);
 
         // We might have hit the end of a frame
         if(in_char == AFPROTO_END_BYTE) {
@@ -102,9 +96,7 @@ static void UARTIsr(void) {
 }
 
 static void CommunicationSendChar(char ch) {
-    uart_out_buff[uart_out_buff_end++] = ch;
-    if(uart_out_buff_end >= COMMUNICATION_UART_OUT_BUFF_SIZE)
-        uart_out_buff_end = 0;
+    RingBufferPush(&uart_out_ringbuffer, ch);
 }
 
 void CommunicationSend(const char *data, unsigned int data_size) {
@@ -144,9 +136,12 @@ void CommunicationSend(const char *data, unsigned int data_size) {
 }
 
 void CommunicationInit(void) {
-    uart_in_buff_used = 0;
-    uart_out_buff_start = 0;
-    uart_out_buff_end = 0;
+    RingBufferInit(&uart_in_ringbuffer, uart_in_data,
+            COMMUNICATION_UART_IN_BUFF_SIZE);
+    BufferInit(&deframed_buffer, deframed_data,
+            COMMUNICATION_UART_IN_BUFF_SIZE);
+    RingBufferInit(&uart_out_ringbuffer, uart_out_data,
+            COMMUNICATION_UART_OUT_BUFF_SIZE);
 
     // Initialize UART peripheral
     UARTConsoleInit();
