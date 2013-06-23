@@ -53,7 +53,7 @@ int RingBufferPop(RingBuffer *b, char *dst) {
     return 1;
 }
 
-int RingBufferPeek(RingBuffer *b, char *dst) {
+int RingBufferPeek(const RingBuffer *b, char *dst) {
     if(b->used_end == b->size) return 0;
 
     if(dst) *dst = b->used_start;

@@ -30,7 +30,7 @@ void RingBufferPush(RingBuffer *b, char ch);
 int RingBufferPop(RingBuffer *b, char *dst);
 
 /* Peeks at one char, zero if buffer is empty, 1 otherwise */
-int RingBufferPeek(RingBuffer *b, char *dst);
+int RingBufferPeek(const RingBuffer *b, char *dst);
 
 #endif
 
