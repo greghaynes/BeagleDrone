@@ -7,6 +7,7 @@
 #include "kernel/beaglebone.h"
 #include "kernel/hw/hw_types.h"
 #include "kernel/hw/hw_control_AM335x.h"
+#include "kernel/interrupt.h"
 
 #define UART_MODULE_INPUT_CLK                (48000000)
 
@@ -295,6 +296,7 @@ void UartModuleClkConfig(unsigned int baseAdd)
                    CM_WKUP_UART0_CLKCTRL_IDLEST_SHIFT) !=
                   (HWREG(SOC_CM_WKUP_REGS + CM_WKUP_UART0_CLKCTRL) &
                    CM_WKUP_UART0_CLKCTRL_IDLEST));
+            break;
     }
 }
 
@@ -307,5 +309,25 @@ void UartInit(unsigned int baseAdd, unsigned int baudRate)
     UartPinMuxSetup(baseAdd);
 
     UartInitExpClk(baseAdd, baudRate, 1, 1);
+}
+
+void UartInterruptEnable(unsigned int baseAdd, void (*fnHandler)(void))
+{
+    switch(baseAdd)
+    {
+        case SOC_UART_0_REGS:
+            // Register the UART ISR
+            IntRegister(SYS_INT_UART0INT, fnHandler);
+
+            // Set interrupt priority
+            IntPrioritySet(SYS_INT_UART0INT, 1, AINTC_HOSTINT_ROUTE_IRQ);
+
+            // Enable system interrupt
+            IntSystemEnable(SYS_INT_UART0INT);
+            break;
+    }
+
+    // Enable UART read interrupts
+    UARTIntEnable(baseAdd, UART_INT_RHR_CTI);
 }
 

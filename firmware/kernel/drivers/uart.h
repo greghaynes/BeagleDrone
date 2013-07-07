@@ -13,5 +13,7 @@ void UartInitExpClk(unsigned int baseAdd,
                          unsigned int rxTrigLevel,
                          unsigned int txTrigLevel);
 
+void UartInterruptEnable(unsigned int baseAdd, void (*fnHandler)(void));
+
 #endif
 

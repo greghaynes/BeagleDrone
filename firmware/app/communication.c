@@ -152,16 +152,6 @@ void CommunicationInit(void) {
     // Initialize UART peripheral
     UartInit(UART_CONSOLE_BASE, BAUD_RATE_115200);
 
-    // Register the UART ISR
-    IntRegister(SYS_INT_UART0INT, UARTIsr);
-
-    // Set interrupt priority
-    IntPrioritySet(SYS_INT_UART0INT, 1, AINTC_HOSTINT_ROUTE_IRQ);
-
-    // Enable system interrupt
-    IntSystemEnable(SYS_INT_UART0INT);
-
-    // Enable UART read interrupts
-    // UARTIntEnable(UART_CONSOLE_BASE, UART_INT_RHR_CTI);
+    UartInterruptEnable(UART_CONSOLE_BASE, UARTIsr);
 }
 
