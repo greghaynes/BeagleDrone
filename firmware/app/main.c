@@ -1,4 +1,3 @@
-#include "utils/uartStdio.h"
 #include "kernel/interrupt.h"
 #include "kernel/sysdelay.h"
 #include "app/communication.h"
