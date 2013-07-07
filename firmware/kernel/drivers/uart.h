@@ -8,7 +8,7 @@ void UartFIFOConfigure(unsigned int baseAdd,
 void UartInit(unsigned int baseAdd, unsigned int baudRate);
 void UartModuleClkConfig(unsigned int baseAdd);
 void UartPinMuxSetup(unsigned int baseAdd);
-void UartStdioInitExpClk(unsigned int baseAdd,
+void UartInitExpClk(unsigned int baseAdd,
                          unsigned int baudRate,
                          unsigned int rxTrigLevel,
                          unsigned int txTrigLevel);

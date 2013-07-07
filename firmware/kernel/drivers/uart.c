@@ -30,7 +30,7 @@ void UartFIFOConfigure(unsigned int baseAdd,
     UARTFIFOConfig(baseAdd, fifoConfig);
 }
 
-void UartStdioInitExpClk(unsigned int baseAdd,
+void UartInitExpClk(unsigned int baseAdd,
                          unsigned int baudRate,
                          unsigned int rxTrigLevel,
                          unsigned int txTrigLevel)
@@ -306,6 +306,6 @@ void UartInit(unsigned int baseAdd, unsigned int baudRate)
     /* Performing the Pin Multiplexing for UART0 instance. */
     UartPinMuxSetup(baseAdd);
 
-    UartStdioInitExpClk(baseAdd, baudRate, 1, 1);
+    UartInitExpClk(baseAdd, baudRate, 1, 1);
 }
 
