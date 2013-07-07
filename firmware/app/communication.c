@@ -1,7 +1,7 @@
+#include "kernel/hw/soc_AM335x.h"
 #include "kernel/drivers/uart_irda_cir.h"
+#include "kernel/drivers/uart.h"
 #include "kernel/interrupt.h"
-#include "utils/uartConsole.h"
-#include "utils/uartStdio.h"
 #include "app/afproto.h"
 #include "app/buffer.h"
 #include "app/crc16.h"
@@ -9,6 +9,9 @@
 #include "communication.h"
 
 #include <string.h>
+
+#define UART_CONSOLE_BASE                    (SOC_UART_0_REGS)
+#define BAUD_RATE_115200                     (115200)
 
 static char uart_in_data[COMMUNICATION_UART_IN_BUFF_SIZE];
 static RingBuffer uart_in_ringbuffer;
@@ -77,12 +80,7 @@ void CommunicationCheckRead(void) {
             return;
         }
 
-        RingBufferPush(&uart_in_ringbuffer, in_char);
-
-        // We might have hit the end of a frame
-        if(in_char == AFPROTO_END_BYTE) {
-            CommunicationCheckForFrame();
-        }
+        CommunicationGotChar(in_char);
     }
 }
 
@@ -135,6 +133,14 @@ void CommunicationSend(const char *data, unsigned int data_size) {
     UARTIntEnable(UART_CONSOLE_BASE, UART_INT_THR);
 }
 
+void CommunicationGotChar(char ch) {
+    RingBufferPush(&uart_in_ringbuffer, ch);
+
+    // We might have hit the end of a frame
+    if(ch == AFPROTO_END_BYTE)
+        CommunicationCheckForFrame();
+}
+
 void CommunicationInit(void) {
     RingBufferInit(&uart_in_ringbuffer, uart_in_data,
             COMMUNICATION_UART_IN_BUFF_SIZE);
@@ -144,7 +150,7 @@ void CommunicationInit(void) {
             COMMUNICATION_UART_OUT_BUFF_SIZE);
 
     // Initialize UART peripheral
-    UARTConsoleInit();
+    UartInit(UART_CONSOLE_BASE, BAUD_RATE_115200);
 
     // Register the UART ISR
     IntRegister(SYS_INT_UART0INT, UARTIsr);

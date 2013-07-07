@@ -1,6 +1,6 @@
 #include "motorcontrol.h"
 #include "kernel/hw/soc_AM335x.h"
-#include "kernel/platform/pwmss.h"
+#include "kernel/platform/beaglebone/pwmss.h"
 #include "kernel/drivers/ehrpwm.h"
 
 #define CLOCK_DIV_VAL                 (10)

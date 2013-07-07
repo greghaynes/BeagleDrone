@@ -9,20 +9,18 @@ LD_LIBS=-L$(ARM_TOOLS_DIR)/lib/gcc/arm-none-eabi/4.6.3 -lgcc -L$(ARM_TOOLS_DIR)/
 OBJS=kernel/boot/startup.o\
 	kernel/boot/init.o\
 	kernel/boot/isr.o\
-	kernel/platform/dmtimer.o\
-	kernel/platform/uart.o\
-	kernel/platform/hsi2c.o\
-	kernel/platform/pwmss.o\
+	kernel/platform/beaglebone/dmtimer.o\
+	kernel/platform/beaglebone/hsi2c.o\
+	kernel/platform/beaglebone/pwmss.o\
 	kernel/drivers/cp15.o\
-	kernel/drivers/uart_irda_cir.o\
 	kernel/drivers/dmtimer.o\
 	kernel/drivers/ehrpwm.o\
 	kernel/drivers/hsi2c.o\
+	kernel/drivers/uart.o\
+	kernel/drivers/uart_irda_cir.o\
 	kernel/cpu.o\
 	kernel/interrupt.o\
 	kernel/sysdelay.o\
-	utils/uartConsole.o\
-	utils/uartStdio.o\
 	utils/delay.o\
 	app/crc16.o\
 	app/afproto.o\

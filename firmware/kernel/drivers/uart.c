@@ -1,75 +1,96 @@
-/**
- * \file   uart.c
- *
- * \brief  This file contains functions which does the platform specific
- *         configurations for UART.
- */
+#include "kernel/drivers/uart.h"
 
-/*
-* Copyright (C) 2010 Texas Instruments Incorporated - http://www.ti.com/
-*/
-/*
-*  Redistribution and use in source and binary forms, with or without
-*  modification, are permitted provided that the following conditions
-*  are met:
-*
-*    Redistributions of source code must retain the above copyright
-*    notice, this list of conditions and the following disclaimer.
-*
-*    Redistributions in binary form must reproduce the above copyright
-*    notice, this list of conditions and the following disclaimer in the
-*    documentation and/or other materials provided with the
-*    distribution.
-*
-*    Neither the name of Texas Instruments Incorporated nor the names of
-*    its contributors may be used to endorse or promote products derived
-*    from this software without specific prior written permission.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-*  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-*  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-*  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-*  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-*  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-*  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-*  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-*  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-*  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-*  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-*/
-
-
-#include "kernel/hw/hw_control_AM335x.h"
-#include "kernel/hw/soc_AM335x.h"
-#include "kernel/hw/hw_cm_wkup.h"
 #include "kernel/hw/hw_cm_per.h"
+#include "kernel/hw/hw_cm_wkup.h"
+#include "kernel/drivers/uart_irda_cir.h"
+#include "kernel/hw/soc_AM335x.h"
 #include "kernel/beaglebone.h"
 #include "kernel/hw/hw_types.h"
+#include "kernel/hw/hw_control_AM335x.h"
 
-/**
- * \brief   This function selects the UART pins for use. The UART pins
- *          are multiplexed with pins of other peripherals in the SoC
- *          
- * \param   instanceNum       The instance number of the UART to be used.
- *
- * \return  None.
- *
- * \note    This pin multiplexing depends on the profile in which the EVM
- *          is configured.
- */
-void UARTPinMuxSetup(unsigned int instanceNum)
+#define UART_MODULE_INPUT_CLK                (48000000)
+
+void UartFIFOConfigure(unsigned int baseAdd,
+                       unsigned int txTrigLevel,
+                       unsigned int rxTrigLevel)
 {
-     if(0 == instanceNum)
-     {
-          /* RXD */
-          HWREG(SOC_CONTROL_REGS + CONTROL_CONF_UART_RXD(0)) = 
-          (CONTROL_CONF_UART0_RXD_CONF_UART0_RXD_PUTYPESEL | 
-           CONTROL_CONF_UART0_RXD_CONF_UART0_RXD_RXACTIVE);
+    unsigned int fifoConfig = 0;
 
-          /* TXD */
-          HWREG(SOC_CONTROL_REGS + CONTROL_CONF_UART_TXD(0)) = 
-           CONTROL_CONF_UART0_TXD_CONF_UART0_TXD_PUTYPESEL;
+    /* Setting the TX and RX FIFO Trigger levels as 1. No DMA enabled. */
+    fifoConfig = UART_FIFO_CONFIG(UART_TRIG_LVL_GRANULARITY_1,
+                                  UART_TRIG_LVL_GRANULARITY_1,
+                                  txTrigLevel,
+                                  rxTrigLevel,
+                                  1,
+                                  1,
+                                  UART_DMA_EN_PATH_SCR,
+                                  UART_DMA_MODE_0_ENABLE);
+
+    /* Configuring the FIFO settings. */
+    UARTFIFOConfig(baseAdd, fifoConfig);
+}
+
+void UartStdioInitExpClk(unsigned int baseAdd,
+                         unsigned int baudRate,
+                         unsigned int rxTrigLevel,
+                         unsigned int txTrigLevel)
+{
+    /* Performing a module reset. */
+    UARTModuleReset(baseAdd);
+
+    /* Performing FIFO configurations. */
+    UartFIFOConfigure(baseAdd, txTrigLevel, rxTrigLevel);
+
+    /* Performing Baud Rate settings. */
+    UartBaudRateSet(baseAdd, baudRate);
+
+    /* Switching to Configuration Mode B. */
+    UARTRegConfigModeEnable(baseAdd, UART_REG_CONFIG_MODE_B);
+
+    /* Programming the Line Characteristics. */
+    UARTLineCharacConfig(baseAdd,
+                         (UART_FRAME_WORD_LENGTH_8 | UART_FRAME_NUM_STB_1),
+                         UART_PARITY_NONE);
+
+    /* Disabling write access to Divisor Latches. */
+    UARTDivisorLatchDisable(baseAdd);
+
+    /* Disabling Break Control. */
+    UARTBreakCtl(baseAdd, UART_BREAK_COND_DISABLE);
+
+    /* Switching to UART16x operating mode. */
+    UARTOperatingModeSelect(baseAdd, UART16x_OPER_MODE);
+}
+
+void UartBaudRateSet(unsigned int baseAdd, unsigned int baudRate)
+{
+    unsigned int divisorValue = 0;
+
+    /* Computing the Divisor Value. */
+    divisorValue = UARTDivisorValCompute(UART_MODULE_INPUT_CLK,
+                                         baudRate,
+                                         UART16x_OPER_MODE,
+                                         UART_MIR_OVERSAMPLING_RATE_42);
+
+    /* Programming the Divisor Latches. */
+    UARTDivisorLatchWrite(baseAdd, divisorValue);
+}
+
+
+void UartPinMuxSetup(unsigned int baseAdd)
+{
+     switch(baseAdd)
+     {
+         case SOC_UART_0_REGS:
+              /* RXD */
+              HWREG(SOC_CONTROL_REGS + CONTROL_CONF_UART_RXD(0)) = 
+              (CONTROL_CONF_UART0_RXD_CONF_UART0_RXD_PUTYPESEL | 
+               CONTROL_CONF_UART0_RXD_CONF_UART0_RXD_RXACTIVE);
+
+              /* TXD */
+              HWREG(SOC_CONTROL_REGS + CONTROL_CONF_UART_TXD(0)) = 
+               CONTROL_CONF_UART0_TXD_CONF_UART0_TXD_PUTYPESEL;
+              break;
      }
 }
 
@@ -78,7 +99,7 @@ void UARTPinMuxSetup(unsigned int instanceNum)
 ** This also enables the clocks for UART0 instance.
 */
 
-void UART0ModuleClkConfig(void)
+void UartModuleClkConfig(unsigned int baseAdd)
 {
     /* Configuring L3 Interface Clocks. */
 
@@ -197,14 +218,19 @@ void UART0ModuleClkConfig(void)
           (HWREG(SOC_CM_WKUP_REGS + CM_WKUP_CM_L3_AON_CLKSTCTRL) &
            CM_WKUP_CM_L3_AON_CLKSTCTRL_CLKTRCTRL));
 
-    /* Writing to MODULEMODE field of CM_WKUP_UART0_CLKCTRL register. */
-    HWREG(SOC_CM_WKUP_REGS + CM_WKUP_UART0_CLKCTRL) |=
-          CM_WKUP_UART0_CLKCTRL_MODULEMODE_ENABLE;
+    switch(baseAdd)
+    {
+        case SOC_UART_0_REGS:
+            /* Writing to MODULEMODE field of CM_WKUP_UART0_CLKCTRL register. */
+            HWREG(SOC_CM_WKUP_REGS + CM_WKUP_UART0_CLKCTRL) |=
+                  CM_WKUP_UART0_CLKCTRL_MODULEMODE_ENABLE;
 
-    /* Waiting for MODULEMODE field to reflect the written value. */
-    while(CM_WKUP_UART0_CLKCTRL_MODULEMODE_ENABLE !=
-          (HWREG(SOC_CM_WKUP_REGS + CM_WKUP_UART0_CLKCTRL) &
-           CM_WKUP_UART0_CLKCTRL_MODULEMODE));
+            /* Waiting for MODULEMODE field to reflect the written value. */
+            while(CM_WKUP_UART0_CLKCTRL_MODULEMODE_ENABLE !=
+                  (HWREG(SOC_CM_WKUP_REGS + CM_WKUP_UART0_CLKCTRL) &
+                   CM_WKUP_UART0_CLKCTRL_MODULEMODE));
+            break;
+    }
 
     /* Verifying if the other bits are set to required settings. */
 
@@ -258,14 +284,28 @@ void UART0ModuleClkConfig(void)
           (HWREG(SOC_CM_WKUP_REGS + CM_WKUP_CLKSTCTRL) &
            CM_WKUP_CLKSTCTRL_CLKACTIVITY_UART0_GFCLK));
 
-    /*
-    ** Waiting for IDLEST field in CM_WKUP_UART0_CLKCTRL register to attain
-    ** desired value.
-    */
-    while((CM_WKUP_UART0_CLKCTRL_IDLEST_FUNC <<
-           CM_WKUP_UART0_CLKCTRL_IDLEST_SHIFT) !=
-          (HWREG(SOC_CM_WKUP_REGS + CM_WKUP_UART0_CLKCTRL) &
-           CM_WKUP_UART0_CLKCTRL_IDLEST));
+    switch(baseAdd)
+    {
+        case SOC_UART_0_REGS:
+            /*
+            ** Waiting for IDLEST field in CM_WKUP_UART0_CLKCTRL register to attain
+            ** desired value.
+            */
+            while((CM_WKUP_UART0_CLKCTRL_IDLEST_FUNC <<
+                   CM_WKUP_UART0_CLKCTRL_IDLEST_SHIFT) !=
+                  (HWREG(SOC_CM_WKUP_REGS + CM_WKUP_UART0_CLKCTRL) &
+                   CM_WKUP_UART0_CLKCTRL_IDLEST));
+    }
 }
 
-/****************************** End of file *********************************/
+void UartInit(unsigned int baseAdd, unsigned int baudRate)
+{
+    /* Configuring the system clocks for UART0 instance. */
+    UartModuleClkConfig(baseAdd);
+
+    /* Performing the Pin Multiplexing for UART0 instance. */
+    UartPinMuxSetup(baseAdd);
+
+    UartStdioInitExpClk(baseAdd, baudRate, 1, 1);
+}
+

@@ -10,6 +10,9 @@
 // Send data in afproto frame
 void CommunicationSend(const char *data, unsigned int data_size);
 
+// Received a char of input, handle it
+void CommunicationGotChar(char ch);
+
 void CommunicationInit(void);
 
 #endif
