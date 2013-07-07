@@ -153,5 +153,8 @@ void CommunicationInit(void) {
     UartInit(UART_CONSOLE_BASE, BAUD_RATE_115200);
 
     UartInterruptEnable(UART_CONSOLE_BASE, UARTIsr);
+
+    // Enable UART read interrupts
+    UARTIntEnable(UART_CONSOLE_BASE, UART_INT_RHR_CTI);
 }
 

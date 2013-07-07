@@ -326,8 +326,5 @@ void UartInterruptEnable(unsigned int baseAdd, void (*fnHandler)(void))
             IntSystemEnable(SYS_INT_UART0INT);
             break;
     }
-
-    // Enable UART read interrupts
-    UARTIntEnable(baseAdd, UART_INT_RHR_CTI);
 }
 
