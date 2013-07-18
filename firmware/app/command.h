@@ -1,26 +1,21 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
-#include "app/state.h"
-
 typedef struct CommandTypeHeader {
     unsigned char type_id;
 } CommandTypeHeader;
 
 typedef enum {
-    COMMAND_TYPE_LOG_MSG = 0,
-    COMMAND_TYPE_SET_ROT_SETPOINT = 1,
+    COMMAND_TYPE_LOG = 0,
+    COMMAND_TYPE_NAV = 1,
+    COMMAND_CNT = 2
 } command_type_t;
 
-typedef struct CommandLogMsgHeader {
-    CommandTypeHeader type_header;
-    unsigned char log_level;
-} CommandLogMsgHeader;
+typedef void (*command_handler_t)(unsigned char type_id, const char *data);
 
-typedef struct CommandSetRotSetpoint {
-    CommandTypeHeader type_header;
-    StateRotationalFloat rot_setpoint;
-} CommandSetRotSetpoint;
+void CommandInit(void);
+
+void CommandSetHandler(unsigned char type_id, command_handler_t handler);
 
 void CommandHandleRaw(const char *data);
 
