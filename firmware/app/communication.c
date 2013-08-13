@@ -35,7 +35,7 @@ void CommunicationCheckForFrame(void) {
     BufferClear(&deframed_buffer);
     while(RingBufferPop(&uart_in_ringbuffer, &ch)) {
         if(prev_escape) {
-            ch ^= 0x20; 
+            ch ^= 0x20;
             prev_escape = 0;
         }
 
@@ -53,13 +53,16 @@ void CommunicationCheckForFrame(void) {
             CommunicationCheckForFrame();
         }
 
-        if(deframed_buffer.used >= 2)
+        if(deframed_buffer.used >= 2 && ch != AFPROTO_END_BYTE)
             crc_check = crc16_floating(deframed_data[deframed_buffer.used-2],
                                        crc_check);
 
         if(ch == AFPROTO_END_BYTE)
             break;
     }
+
+    if(deframed_buffer.used < 2)
+        return;
 
     // We never saw an end byte
     // If our callers logic is correct, we should never hit this branch
