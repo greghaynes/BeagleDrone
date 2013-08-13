@@ -17,6 +17,10 @@ int BufferSet(Buffer *b, const char *src, unsigned int size) {
     return size;
 }
 
+void BufferClear(Buffer *b) {
+    b->used = 0;
+}
+
 int BufferAppend(Buffer *b, char ch) {
     if(b->used >= b->size) return 0;
 
@@ -32,19 +36,21 @@ void RingBufferInit(RingBuffer *b, char *data, unsigned int size) {
 }
 
 void RingBufferPush(RingBuffer *b, char ch) {
-    b->data[b->used_end] = ch;
-    ++b->used_end;
-    if(b->used_end >= b->size)
-        b->used_end = 0;
-
+    if(b->used_end == b->size) {
+        b->data[0] = ch;
+        b->used_end = 1;
+    } else {
+        b->data[b->used_end] = ch;
+        ++b->used_end;
+    }
     if(b->used_end == b->used_start)
         ++b->used_start;
 }
 
 int RingBufferPop(RingBuffer *b, char *dst) {
-    if(b->used_end == b->size) return 0;
+    if(b->used_end == b->used_start) return 0;
 
-    if(dst) *dst = b->used_start;
+    if(dst) *dst = b->data[b->used_start];
     ++b->used_start;
 
     if(b->used_start >= b->size)
@@ -54,7 +60,7 @@ int RingBufferPop(RingBuffer *b, char *dst) {
 }
 
 int RingBufferPeek(const RingBuffer *b, char *dst) {
-    if(b->used_end == b->size) return 0;
+    if(b->used_end == b->used_start) return 0;
 
     if(dst) *dst = b->used_start;
 

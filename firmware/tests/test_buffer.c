@@ -52,11 +52,26 @@ void test_ring_buffer_push(void) {
     assert(!strncmp(b.data, "ccbbb", 5));
 }
 
+void test_ring_buffer_pop(void) {
+    RingBuffer b;
+    char data[6];
+    char test[6];
+    int i;
+    RingBufferInit(&b, data, 6);
+    for(i = 0;i < 6;++i)
+        RingBufferPush(&b, 'a'+i);
+    for(i = 0;i < 6;++i)
+        assert(RingBufferPop(&b, &test[i]) == 1);
+    assert(!strncmp(test, "abcdef", 6));
+}
+
 int main(int argc, char **argv) {
     TestInfo tests[] = {
         { "Buffer append", test_buffer_append },
         { "Buffer set", test_buffer_set },
         { "Ring buffer push", test_ring_buffer_push },
+        { "Ring buffer pop", test_ring_buffer_pop },
+        { 0, 0 }
     };
 
     run_tests(tests);

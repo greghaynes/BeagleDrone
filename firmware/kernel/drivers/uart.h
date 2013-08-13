@@ -13,7 +13,10 @@ void UartInitExpClk(unsigned int baseAdd,
                          unsigned int rxTrigLevel,
                          unsigned int txTrigLevel);
 
-void UartInterruptEnable(unsigned int baseAdd, void (*fnHandler)(void));
+void UartSetInterruptHandler(unsigned int baseAdd, void (*fnHandler)(void));
+
+/* Returns 0 if no char available, 1 otherwise */
+int UartGetCharNonBlocking(unsigned int baseAdd, unsigned char *data);
 
 #endif
 

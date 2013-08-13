@@ -1364,38 +1364,6 @@ unsigned int UARTCharPutNonBlocking(unsigned int baseAdd,
     return retVal;
 }
 
-
-/**
- * \brief    This API reads a byte from the Receiver Buffer Register
- *           (RBR). It checks once if any character is ready to be read.
- *
- * \param    baseAdd     Memory address of the UART instance being used.
- *
- * \return   If the RX FIFO(or RHR) was found to have atleast one byte of
- *           data, then this API reads and returns that byte. Else it
- *           returns -1.
- */
-
-signed char UARTCharGetNonBlocking(unsigned int baseAdd)
-{
-    unsigned int lcrRegValue = 0;
-    signed char retVal = -1;
-
-    /* Switching to Register Operational Mode of operation. */
-    lcrRegValue = UARTRegConfigModeEnable(baseAdd, UART_REG_OPERATIONAL_MODE);
-
-    /* Checking if the RX FIFO(or RHR) has atleast one byte of data. */
-    if(HWREG(baseAdd + UART_LSR) & UART_LSR_RX_FIFO_E)
-    {
-        retVal = (signed char)HWREG(baseAdd + UART_RHR);
-    }
-
-    /* Restoring the value of LCR. */
-    HWREG(baseAdd + UART_LCR) = lcrRegValue;
-
-    return retVal;
-}
-
 /**
  * \brief    This API waits indefinitely for the arrival of a byte in
  *           the receiver FIFO. Once a byte has arrived, it returns that

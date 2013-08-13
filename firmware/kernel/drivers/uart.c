@@ -311,7 +311,7 @@ void UartInit(unsigned int baseAdd, unsigned int baudRate)
     UartInitExpClk(baseAdd, baudRate, 1, 1);
 }
 
-void UartInterruptEnable(unsigned int baseAdd, void (*fnHandler)(void))
+void UartSetInterruptHandler(unsigned int baseAdd, void (*fnHandler)(void))
 {
     switch(baseAdd)
     {
@@ -326,5 +326,26 @@ void UartInterruptEnable(unsigned int baseAdd, void (*fnHandler)(void))
             IntSystemEnable(SYS_INT_UART0INT);
             break;
     }
+}
+
+int UartGetCharNonBlocking(unsigned int baseAdd, unsigned char *data)
+{
+    unsigned int lcrRegValue = 0;
+    signed char retVal = 0;
+
+    /* Switching to Register Operational Mode of operation. */
+    lcrRegValue = UARTRegConfigModeEnable(baseAdd, UART_REG_OPERATIONAL_MODE);
+
+    /* Checking if the RX FIFO(or RHR) has atleast one byte of data. */
+    if(HWREG(baseAdd + UART_LSR) & UART_LSR_RX_FIFO_E)
+    {
+        *data = (unsigned char)HWREG(baseAdd + UART_RHR);
+        retVal = 1;
+    }
+
+    /* Restoring the value of LCR. */
+    HWREG(baseAdd + UART_LCR) = lcrRegValue;
+
+    return retVal;
 }
 

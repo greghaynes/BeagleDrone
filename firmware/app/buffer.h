@@ -19,6 +19,8 @@ void BufferInit(Buffer *b, char *data, unsigned int size);
 /* Returns zero if src is too large, size otherwise */
 int BufferSet(Buffer *b, const char *src, unsigned int size);
 
+void BufferClear(Buffer *b);
+
 /* Returns zero if full, 1 otherwise */
 int BufferAppend(Buffer *b, char ch);
 

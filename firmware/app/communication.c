@@ -6,7 +6,8 @@
 #include "app/buffer.h"
 #include "app/crc16.h"
 #include "app/log.h"
-#include "communication.h"
+#include "app/command.h"
+#include "app/communication.h"
 
 #include <string.h>
 
@@ -22,17 +23,61 @@ static char uart_out_data[COMMUNICATION_UART_OUT_BUFF_SIZE];
 static RingBuffer uart_out_ringbuffer;
 
 void CommunicationCheckForFrame(void) {
-    /* TODO: Fix aproto to work with ringbuffer
-    if((ret = afproto_get_data(uart_in_buff, uart_in_buff_used,
-                     deframed_buff, &ret_size)) >= 0) {
-        uart_in_buff_used -= ret;
-        memcpy(uart_in_buff, uart_in_buff + ret, uart_in_buff_used);
-        deframed_buff_size = ret;
-    } else if (ret_size != 0) {
-        uart_in_buff_used -= ret_size;
-        memcpy(uart_in_buff, uart_in_buff + ret_size, uart_in_buff_used);
-        deframed_buff_size = 0;
-    } */
+    char ch;
+    unsigned short crc_check = 0;
+    int prev_escape = 0;
+    int i;
+    while(RingBufferPop(&uart_in_ringbuffer, &ch) && ch != AFPROTO_START_BYTE);
+    // We never saw a start byte
+    if(ch != AFPROTO_START_BYTE)
+        return;
+
+    BufferClear(&deframed_buffer);
+    while(RingBufferPop(&uart_in_ringbuffer, &ch)) {
+        if(prev_escape) {
+            ch ^= 0x20; 
+            prev_escape = 0;
+        }
+
+        if(ch == AFPROTO_ESC_BYTE)
+            prev_escape = 1;
+        else if(!BufferAppend(&deframed_buffer, ch)) {
+            // We ran out of space!
+            BufferClear(&deframed_buffer);
+
+            // The previous data must be invalid, but there could still
+            // be a valid frame in the input buffer
+            if(ch == AFPROTO_START_BYTE)
+                RingBufferPush(&uart_in_ringbuffer, ch);
+
+            CommunicationCheckForFrame();
+        }
+
+        if(deframed_buffer.used >= 2)
+            crc_check = crc16_floating(deframed_data[deframed_buffer.used-2],
+                                       crc_check);
+
+        if(ch == AFPROTO_END_BYTE)
+            break;
+    }
+
+    // We never saw an end byte
+    // If our callers logic is correct, we should never hit this branch
+    if(ch != AFPROTO_END_BYTE) {
+        LogCString(LOG_LEVEL_ERROR, "Check for frame called but no afproto end byte found");
+        for(i = 0;i < deframed_buffer.used;++i)
+            RingBufferPush(&uart_in_ringbuffer, deframed_data[i]);
+        BufferClear(&deframed_buffer);
+        return;
+    }
+
+    unsigned short sent_crc = *(unsigned short*)&deframed_data[deframed_buffer.used-2];
+    if(sent_crc != crc_check) {
+        LogCString(LOG_LEVEL_NOTICE, "Received afproto frame with invalid CRC");
+        return;
+    }
+
+    CommandHandleRaw(deframed_data);
 }
 
 void CommunicationCheckWrite(void) {
@@ -71,15 +116,8 @@ void CommunicationCheckWrite(void) {
 }
 
 void CommunicationCheckRead(void) {
-    while(1) {
-        signed char in_char = UARTCharGetNonBlocking(UART_CONSOLE_BASE);
-
-        // Check if we got a char
-        if(in_char == -1) {
-            // No more chars to read
-            return;
-        }
-
+    unsigned char in_char;
+    while(UartGetCharNonBlocking(UART_CONSOLE_BASE, &in_char)) {
         CommunicationGotChar(in_char);
     }
 }
@@ -142,6 +180,7 @@ void CommunicationGotChar(char ch) {
 }
 
 void CommunicationInit(void) {
+    LogCString(LOG_LEVEL_DEBUG, "Initializing communication");
     RingBufferInit(&uart_in_ringbuffer, uart_in_data,
             COMMUNICATION_UART_IN_BUFF_SIZE);
     BufferInit(&deframed_buffer, deframed_data,
@@ -152,9 +191,10 @@ void CommunicationInit(void) {
     // Initialize UART peripheral
     UartInit(UART_CONSOLE_BASE, BAUD_RATE_115200);
 
-    UartInterruptEnable(UART_CONSOLE_BASE, UARTIsr);
+    UartSetInterruptHandler(UART_CONSOLE_BASE, UARTIsr);
 
     // Enable UART read interrupts
     UARTIntEnable(UART_CONSOLE_BASE, UART_INT_RHR_CTI);
+    LogCString(LOG_LEVEL_DEBUG, "Communication initialized");
 }
 

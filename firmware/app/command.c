@@ -1,20 +1,23 @@
 #include "command.h"
 #include "app/communication.h"
 #include "app/log.h"
+#include "app/commands/nav.h"
 
 #include <string.h>
 
 static char command_buffer[COMMUNICATION_UART_OUT_BUFF_SIZE];
 
-static command_handler_t command_handlers[COMMAND_CNT];
+static CommandHandler_t command_handlers[COMMAND_CNT];
 
 void CommandInit(void) {
     int i;
     for(i = 0;i < COMMAND_CNT;++i)
         command_handlers[i] = 0;
+
+    CommandsNavInit();
 }
 
-void CommandSetHandler(unsigned char type_id, command_handler_t handler) {
+void CommandSetHandler(unsigned char type_id, CommandHandler_t handler) {
     command_handlers[type_id] = handler;
 }
 
