@@ -39,26 +39,28 @@ void CommunicationCheckForFrame(void) {
             prev_escape = 0;
         }
 
-        if(ch == AFPROTO_ESC_BYTE)
+        if(ch == AFPROTO_ESC_BYTE) {
             prev_escape = 1;
-        else if(!BufferAppend(&deframed_buffer, ch)) {
-            // We ran out of space!
-            BufferClear(&deframed_buffer);
+        } else {
+            if(!BufferAppend(&deframed_buffer, ch)) {
+                // We ran out of space!
+                BufferClear(&deframed_buffer);
 
-            // The previous data must be invalid, but there could still
-            // be a valid frame in the input buffer
-            if(ch == AFPROTO_START_BYTE)
-                RingBufferPush(&uart_in_ringbuffer, ch);
+                // The previous data must be invalid, but there could still
+                // be a valid frame in the input buffer
+                if(ch == AFPROTO_START_BYTE)
+                    RingBufferPush(&uart_in_ringbuffer, ch);
 
-            CommunicationCheckForFrame();
+                CommunicationCheckForFrame();
+            }
+
+            if(deframed_buffer.used >= 2 && ch != AFPROTO_END_BYTE)
+                crc_check = crc16_floating(deframed_data[deframed_buffer.used-2],
+                                           crc_check);
+
+            if(ch == AFPROTO_END_BYTE)
+                break;
         }
-
-        if(deframed_buffer.used >= 2 && ch != AFPROTO_END_BYTE)
-            crc_check = crc16_floating(deframed_data[deframed_buffer.used-2],
-                                       crc_check);
-
-        if(ch == AFPROTO_END_BYTE)
-            break;
     }
 
     if(deframed_buffer.used < 2)

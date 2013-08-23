@@ -1,4 +1,4 @@
-#include "command.h"
+#include "app/command.h"
 #include "app/communication.h"
 #include "app/log.h"
 #include "app/commands/nav.h"

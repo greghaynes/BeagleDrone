@@ -78,9 +78,13 @@ void test_communication_init(void) {
 void test_communication_receive(void) {
     state_zero();
     CommunicationInit();
-    RingBufferPushCString(&state.in_buff, "\x7d\x68\x69\xc\x7f\x7d");
+    RingBufferPushCString(&state.in_buff, "\x7d\x68\x69\xc\x7e\x5f\x7f");
     state.int_handler();
-    assert(command_handle_raw_last_data);
+    assert(!strncmp(command_handle_raw_last_data, "hi", 2));
+    command_handle_raw_last_data = 0;
+    RingBufferPushCString(&state.in_buff, "\x7d\x68\x69\xc\x7e\x5f\x7f");
+    state.int_handler();
+    assert(!strncmp(command_handle_raw_last_data, "hi", 2));
 }
 
 int main(int argc, char **argv) {
