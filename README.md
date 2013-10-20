@@ -1,4 +1,4 @@
-# BeagleDrone
+BeagleDrone
 ==============
 
 An Open Source drone based on the BeagleBone.
