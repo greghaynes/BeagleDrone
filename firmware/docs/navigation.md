@@ -12,14 +12,35 @@ Navigation Systems" by Esmat Bekir. A brief summary is below.
 
 #### Inertial Frame
 
-* This frame has its origin at Earth center, but does not rotate with it.
+This frame has its origin at Earth center, but does not rotate with it.
+
 * X points toward north pole with origin at earth center.
 * Y and Z plane is at the equator.
 
 #### Earth-Fixed Frame
 
-* This frame has its origin at Earth center, and rotates with the earth.
+This frame has its origin at Earth center, and rotates with the earth.
+
 * X points toward north pole with origin at earth center.
 * Y points at the equator and is perpendicular to the Z axis.
 * Z points at the intersection of the Greenwich Meridian and the equator.
+
+#### Navigation Frame
+
+This frame has its origin on the surface of the earth at its closest point
+to the drone.
+
+* The X Y plane is tangent to the Earth surface.
+* X points North
+* Y points East
+* The Z axis is normal to the surface of the Earth and intersects the center
+  of the drone. It points in toward the center of the earth.
+
+#### Body Frame
+
+This frame has its origin at the center of the drone and rotates with it.
+
+* The X axis points forward
+* The Y axis points down the 'right wing' (imagine a fixed wing craft)
+* The Z axis points downwards
 
