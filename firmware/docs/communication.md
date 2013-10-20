@@ -64,7 +64,8 @@ Direction: RS
 The first byte always specifies a sub-command. The details of each sub-command
 are outlined below.
 
-Sub-commands:
+Unless specified otherwise, all commands are in the Earth-Fixed frame of
+reference (see navigation doc).
 
 ###### If received from drone:
 
@@ -76,8 +77,5 @@ Sub-commands:
 * 0: Set Roll setpoint
 * 1: Set Pitch setpoint
 * 2: Set Yaw setpoint
-* 3: Set X setpoint
-* 4: Set Y setpoint
 * 5: Set Z setpoint
 
-For information about navigation axes, see navigation doc.
