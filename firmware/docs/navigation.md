@@ -44,3 +44,11 @@ This frame has its origin at the center of the drone and rotates with it.
 * The Y axis points down the 'right wing' (imagine a fixed wing craft)
 * The Z axis points downwards
 
+Rotations
+---------
+
+Roll, Pitch, Yaw is typically specified relative to the Body Frame
+
+* Yaw is a rotation about the X axis and happens first.
+* Pitch is a rotation about the Y axis and happens second.
+* Roll is a rotation about the Z axis and happens third.
