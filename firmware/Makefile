@@ -56,11 +56,11 @@ test_buffer:
 	./tests/test_buffer
 
 test_state:
-	gcc -Wall -g -lm -I. app/mathhelp.c app/quaternion.c app/state.c tests/test_help.c tests/test_state.c -o tests/test_state
+	gcc -Wall -g -I. app/mathhelp.c app/quaternion.c app/state.c tests/test_help.c tests/test_state.c -o tests/test_state -lm
 	./tests/test_state
 
 test_quaternion:
-	gcc -g -lm -I. app/mathhelp.c app/quaternion.c tests/test_help.c tests/test_quaternion.c -o tests/test_quaternion
+	gcc -g -I. app/mathhelp.c app/quaternion.c tests/test_help.c tests/test_quaternion.c -o tests/test_quaternion -lm
 	./tests/test_quaternion
 
 test_communication:

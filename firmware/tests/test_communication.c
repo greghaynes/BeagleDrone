@@ -95,4 +95,5 @@ int main(int argc, char **argv) {
     };
 
     run_tests(tests);
+    return 0;
 }
