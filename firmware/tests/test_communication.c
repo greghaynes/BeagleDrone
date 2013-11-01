@@ -2,8 +2,9 @@
 #include "app/buffer.h"
 #include "app/communication.h"
 
-#include <stdio.h>
 #include <assert.h>
+#include <stdio.h>
+#include <string.h>
 
 void RingBufferPushCString(RingBuffer *b, const char *str) {
     while(*str)
@@ -34,6 +35,7 @@ int UartGetCharNonBlocking(unsigned int baseAdd, char *data) {
 
 unsigned int UARTCharPutNonBlocking(unsigned int baseAdd,
                                     unsigned char byteWrite) {
+    return 1;
 }
 
 static unsigned int int_enable_base_add;

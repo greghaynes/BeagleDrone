@@ -24,7 +24,6 @@ void test_command_init(void) {
 }
 
 void test_command_handle_raw(void) {
-    
 }
 
 int main(int argc, char **argv) {

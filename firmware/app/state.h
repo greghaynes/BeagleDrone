@@ -15,8 +15,6 @@ typedef struct StateRotationalShort {
     short yaw;
 } StateRotationalShort;
 
-typedef Vector4F MotorState;
-
 typedef struct State {
     Quaternion r_b_to_i;
 
@@ -24,8 +22,6 @@ typedef struct State {
     Quaternion error_p;
     Quaternion error_i;
     Quaternion error_d;
-
-    MotorState motor_state;
 } State;
 
 void StateSetSetpoint(State *state,
@@ -40,12 +36,9 @@ void StateUpdateRotFromAngVel(State *state,
                               const StateRotationalFloat *ang_vel,
                               float time_delta);
 
-void StateUpdateMotors(State *state);
-
 /* Equivilent to calling these functions, in this order:
  *  StateUpdateRotFromAngVel
  *  StateUpdateError
- *  StateUpdateMotors
  *
  *  This is useful for testing but typically the error and motors are not
  *  updated at the same rate as rotational state.

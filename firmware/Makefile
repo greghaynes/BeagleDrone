@@ -28,8 +28,10 @@ OBJS=kernel/boot/startup.o\
 	app/buffer.o\
 	app/communication.o\
 	app/command.o\
+	app/control.o\
 	app/log.o\
 	app/motorcontrol.o\
+	app/motorstate.o\
 	app/imusensors.o\
 	app/state.o\
 	app/quaternion.o\
@@ -49,7 +51,7 @@ boot.bin: $(OBJS)
 	$(ARMGNU_PREFIX)-objcopy boot.elf -O srec boot.srec
 	$(ARMGNU_PREFIX)-objcopy boot.elf -O binary boot.bin
 
-test: test_buffer test_state test_quaternion test_communication test_command
+test: test_buffer test_state test_quaternion test_communication test_command test_motorstate
 
 test_buffer:
 	gcc -Wall -g -lm -I. app/buffer.c tests/test_help.c tests/test_buffer.c -o tests/test_buffer
@@ -70,6 +72,10 @@ test_communication:
 test_command:
 	gcc -g -I. app/command.c tests/test_command.c tests/test_help.c -o tests/test_command
 	./tests/test_command
+
+test_motorstate:
+	gcc -g -I. app/motorstate.c tests/test_motorstate.c tests/test_help.c -o tests/test_motorstate
+	./tests/test_motorstate
 
 clean:
 	rm $(OBJS) boot.elf boot.srec boot.bin
