@@ -3,6 +3,8 @@ BeagleDrone
 
 An Open Source drone based on the BeagleBone.
 
+![Build Status](https://travis-ci.org/greghaynes/BeagleDrone.png)
+
 ## Why
 
 Robotics projects, specifically drones, often need far more memory than a
