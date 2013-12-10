@@ -3,7 +3,7 @@ BeagleDrone
 
 An Open Source drone based on the BeagleBone.
 
-https://travis-ci.org/greghaynes/BeagleDrone.png
+[![Build Status](https://travis-ci.org/greghaynes/BeagleDrone.png)
 
 ## Why
 
