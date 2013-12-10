@@ -1,4 +1,4 @@
-#include "motorstate.h"
+#include "motorhelp.h"
 
 /* Scale values propotionally so no value is over 1 */
 void MotorRescale(MotorState *s) {

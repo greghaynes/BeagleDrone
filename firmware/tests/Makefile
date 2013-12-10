@@ -2,7 +2,7 @@ CC=gcc
 CFLAGS=-Wall -g -lm -I../
 UNIT_CFLAGS=$(CFLAGS) -Iunit/
 
-test: test_buffer test_state test_quaternion test_communication test_command test_motorstate
+test: test_buffer test_state test_quaternion test_communication test_command test_motorhelp
 
 # UNIT
 test_buffer:
@@ -25,7 +25,7 @@ test_command:
 	$(CC) $(UNIT_CFLAGS) ../app/command.c unit/test_command.c test_help.c -o unit/test_command
 	./unit/test_command
 
-test_motorstate:
-	$(CC) $(UNIT_CFLAGS) ../app/motorstate.c unit/test_motorstate.c test_help.c -o unit/test_motorstate
-	./unit/test_motorstate
+test_motorhelp:
+	$(CC) $(UNIT_CFLAGS) ../app/motorhelp.c unit/test_motorhelp.c test_help.c -o unit/test_motorhelp
+	./unit/test_motorhelp
 
