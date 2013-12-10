@@ -10,7 +10,7 @@ void MotorRescale(MotorState *s) {
             max_ndx = i;
     }
 
-    if(max_ndx > 1) {
+    if(vals[max_ndx] > 1) {
         // Rescale
         float scale = 1 / vals[max_ndx];
         for(i = 0;i < 4;++i)
