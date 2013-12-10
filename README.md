@@ -60,9 +60,7 @@ send the boot.bin. I then execute `go 0x82000000` to run the binary.
 
 ## Testing
 
-Run the command
-
-`make test`
+Change directory into firmware/tests. Run 'make'.
 
 # Client
 
