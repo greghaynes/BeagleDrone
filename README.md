@@ -29,20 +29,12 @@ You require make and an gcc eabi arm cross compiler toolchain to build this
 project. Although any method of obtaining the arm-eabi will work equally well,
 below are the recommended methods for obtaining the toolchain.
 
-### OS X
+## Toolchain
 
-I have used jsnyder's ARM EABI Toolchain Builder to great success, it is very
-easy to install by following the guide in his github repository:
-
-http://github.com/jsnyder/arm-eabi-toolchain
-
-### Linux
-
-I have not tested jsnyder's toolchain on Linux but it claims to work there as
-well. On Linux I tend to use esden's summon-arm-toolchain package:
-
-http://github.com/esden/summon-arm-toolchain
-
+Please visit https://launchpad.net/gcc-arm-embedded to obtain an arm toolchain
+for your platform. Ubuntu users may want to instead visit
+https://launchpad.net/~terry.guo/+archive/gcc-arm-embedded for a package
+installation.
 
 ## Building
 
