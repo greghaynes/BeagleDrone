@@ -25,6 +25,7 @@ void CommandHandleRaw(const char *data) {
     CommandTypeHeader *type_hdr = (CommandTypeHeader*)data;
     switch(type_hdr->type_id) {
         case COMMAND_TYPE_NAV:
+            CommandsNavHandler(type_hdr->type_id, data);
             break;
         default:
             LogCString(LOG_LEVEL_ERROR, "Received invalid command id");
