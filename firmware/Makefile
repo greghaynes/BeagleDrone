@@ -31,7 +31,7 @@ OBJS=kernel/boot/startup.o\
 	app/control.o\
 	app/log.o\
 	app/motorcontrol.o\
-	app/motorstate.o\
+	app/motorhelp.o\
 	app/imusensors.o\
 	app/state.o\
 	app/quaternion.o\
