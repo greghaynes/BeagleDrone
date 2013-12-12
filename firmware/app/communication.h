@@ -7,12 +7,24 @@
 
 #define COMMUNICATION_CHECK_MAX_TIME 100
 
+typedef struct CommunicationState
+{
+    char uart_in_data[COMMUNICATION_UART_IN_BUFF_SIZE];
+    RingBuffer uart_in_ringbuffer;
+    char deframed_data[COMMUNICATION_UART_IN_BUFF_SIZE];
+    Buffer deframed_buffer;
+
+    char uart_out_data[COMMUNICATION_UART_OUT_BUFF_SIZE];
+    RingBuffer uart_out_ringbuffer;
+} CommunicationState;
+
 // Send data in afproto frame
-void CommunicationSend(const char *data, unsigned int data_size);
+void CommunicationSend(CommunicationState *com, const char *data,
+                       unsigned int data_size);
 
 // Received a char of input, handle it
-void CommunicationGotChar(char ch);
+void CommunicationGotChar(CommunicationState *com, char ch);
 
-void CommunicationInit(void);
+void CommunicationInit(CommunicationState *com);
 
 #endif

@@ -72,14 +72,16 @@ void CommandHandleRaw(const char *data)
 
 void test_communication_init(void) {
     state_zero();
-    CommunicationInit();
+    CommunicationState s;
+    CommunicationInit(&s);
     assert(state.int_handler);
     state.int_handler();
 }
 
 void test_communication_receive(void) {
     state_zero();
-    CommunicationInit();
+    CommunicationState s;
+    CommunicationInit(&s);
     RingBufferPushCString(&state.in_buff, "\x7d\x68\x69\xc\x7e\x5f\x7f");
     state.int_handler();
     assert(!strncmp(command_handle_raw_last_data, "hi", 2));
