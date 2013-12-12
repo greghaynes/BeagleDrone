@@ -1,6 +1,8 @@
 #ifndef COMMUNICATION_H
 #define COMMUNICATION_H
 
+#include "app/buffer.h"
+
 /* There are two buffers of this size to allow for frame decoding. */
 #define COMMUNICATION_UART_IN_BUFF_SIZE     1024
 #define COMMUNICATION_UART_OUT_BUFF_SIZE    1024
@@ -26,5 +28,8 @@ void CommunicationSend(CommunicationState *com, const char *data,
 void CommunicationGotChar(CommunicationState *com, char ch);
 
 void CommunicationInit(CommunicationState *com);
+
+// This is a temporary method while removing global state
+CommunicationState *CommunicationStateGet(void);
 
 #endif

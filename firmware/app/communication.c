@@ -3,7 +3,6 @@
 #include "kernel/drivers/uart.h"
 #include "kernel/interrupt.h"
 #include "app/afproto.h"
-#include "app/buffer.h"
 #include "app/crc16.h"
 #include "app/log.h"
 #include "app/command.h"
@@ -13,6 +12,8 @@
 
 #define UART_CONSOLE_BASE                    (SOC_UART_0_REGS)
 #define BAUD_RATE_115200                     (115200)
+
+static CommunicationState *_communicationState;
 
 void CommunicationCheckForFrame(CommunicationState *com) {
     char ch;
@@ -124,9 +125,20 @@ void CommunicationCheck(CommunicationState *com) {
     CommunicationCheckWrite(com);
 }
 
-static void UARTIsr(void *data) {
+/* TODO:GAH
+ * This is an ugly hack. We really should be able to pass state into our ISR
+ * register routine and retrieve this state. Unfortunately, this would require
+ * a rewrite of the UART driver to be OO. For now, were storing the state
+ * globally.
+ */
+// Extra wrapper for ISR so we can mock out the interrupt call in testing.
+static void CommunicationISR(void *data) {
     CommunicationState *com = (CommunicationState*)data;
     CommunicationCheck(com);
+}
+
+static void UARTIsr(void) {
+    CommunicationISR(_communicationState);
 }
 
 static void CommunicationSendChar(CommunicationState *com, char ch) {
@@ -195,5 +207,10 @@ void CommunicationInit(CommunicationState *com) {
     // Enable UART read interrupts
     UARTIntEnable(UART_CONSOLE_BASE, UART_INT_RHR_CTI);
     LogCString(LOG_LEVEL_DEBUG, "Communication initialized");
+
+    _communicationState = com;
 }
 
+CommunicationState *CommunicationStateGet(void) {
+    return _communicationState;
+}
