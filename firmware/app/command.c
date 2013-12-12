@@ -33,9 +33,8 @@ void CommandHandleRaw(const char *data) {
 }
 
 void CommandSend(const CommandTypeHeader *header, unsigned int header_size,
-                  const char *data, unsigned int data_size) {
-
+                 const char *data, unsigned int data_size) {
     memcpy(command_buffer, header, header_size);
     memcpy(command_buffer + header_size, data, data_size);
-    CommunicationSend(command_buffer, header_size + data_size);
+    CommunicationSend(CommunicationStateGet(), command_buffer, header_size + data_size);
 }

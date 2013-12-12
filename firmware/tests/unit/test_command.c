@@ -1,5 +1,6 @@
 #include "tests/test_help.h"
 #include "app/command.h"
+#include "app/communication.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -16,7 +17,11 @@ void CommandsNavHandler(unsigned char type_id, const char *data) {
     nav_handler_data = data;
 }
 
-void CommunicationSend(const char *data, unsigned int size) {
+CommunicationState *CommunicationStateGet(void) {
+    return 0;
+}
+
+void CommunicationSend(CommunicationState *com, const char *data, unsigned int size) {
 }
 
 static int last_log_level;
