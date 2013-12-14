@@ -35,5 +35,5 @@ test_motorhelp:
 	./unit/test_motorhelp
 
 test_commands:
-	$(CC) $(FUNC_CFLAGS) ../app/mathhelp.c ../app/quaternion.c ../app/state.c test_help.c functional/test_commands.c -o functional/test_commands $(LDFLAGS) && \
+	$(CC) $(FUNC_CFLAGS) ../app/buffer.c ../app/command.c ../app/commands/nav.c ../app/communication.c ../app/crc16.c ../app/log.c ../app/mathhelp.c ../app/quaternion.c ../app/state.c mock/uart_driver.c test_help.c functional/test_commands.c -o functional/test_commands $(LDFLAGS) && \
 	./functional/test_commands

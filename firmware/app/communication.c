@@ -191,13 +191,15 @@ void CommunicationGotChar(CommunicationState *com, char ch) {
 }
 
 void CommunicationInit(CommunicationState *com) {
-    LogCString(LOG_LEVEL_DEBUG, "Initializing communication");
     RingBufferInit(&com->uart_in_ringbuffer, com->uart_in_data,
             COMMUNICATION_UART_IN_BUFF_SIZE);
     BufferInit(&com->deframed_buffer, com->deframed_data,
             COMMUNICATION_UART_IN_BUFF_SIZE);
     RingBufferInit(&com->uart_out_ringbuffer, com->uart_out_data,
             COMMUNICATION_UART_OUT_BUFF_SIZE);
+    _communicationState = com;
+
+    LogCString(LOG_LEVEL_DEBUG, "Initializing communication");
 
     // Initialize UART peripheral
     UartInit(UART_CONSOLE_BASE, BAUD_RATE_115200);
@@ -207,8 +209,6 @@ void CommunicationInit(CommunicationState *com) {
     // Enable UART read interrupts
     UARTIntEnable(UART_CONSOLE_BASE, UART_INT_RHR_CTI);
     LogCString(LOG_LEVEL_DEBUG, "Communication initialized");
-
-    _communicationState = com;
 }
 
 CommunicationState *CommunicationStateGet(void) {
