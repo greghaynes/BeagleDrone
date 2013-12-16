@@ -8,7 +8,7 @@ test: test_unit test_functional
 
 test_unit: test_buffer test_state test_quaternion test_communication test_command test_motorhelp
 
-test_functional: test_commands
+test_functional: test_boot test_commands
 
 test_buffer:
 	$(CC) $(UNIT_CFLAGS) ../app/buffer.c test_help.c unit/test_buffer.c -o unit/test_buffer $(LDFLAGS) && \
@@ -33,6 +33,10 @@ test_command:
 test_motorhelp:
 	$(CC) $(UNIT_CFLAGS) ../app/motorhelp.c unit/test_motorhelp.c test_help.c -o unit/test_motorhelp $(LDFLAGS) && \
 	./unit/test_motorhelp
+
+test_boot:
+	$(CC) $(FUNC_CFLAGS) ../app/buffer.c ../app/command.c ../app/commands/nav.c ../app/communication.c ../app/crc16.c ../app/log.c ../app/mathhelp.c ../app/quaternion.c ../app/state.c mock/uart_driver.c test_help.c functional/test_boot.c -o functional/test_boot $(LDFLAGS) && \
+	./functional/test_boot
 
 test_commands:
 	$(CC) $(FUNC_CFLAGS) ../app/buffer.c ../app/command.c ../app/commands/nav.c ../app/communication.c ../app/crc16.c ../app/log.c ../app/mathhelp.c ../app/quaternion.c ../app/state.c mock/uart_driver.c test_help.c functional/test_commands.c -o functional/test_commands $(LDFLAGS) && \
