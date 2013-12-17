@@ -91,10 +91,19 @@ void test_communication_receive(void) {
     assert(!strncmp(command_handle_raw_last_data, "hi", 2));
 }
 
+void test_communication_send(void) {
+    state_zero();
+    CommunicationState s;
+    CommunicationInit(&s);
+    CommunicationSend(&s, "hi", 2);
+    assert(!strncmp(s.uart_out_data, "\x7d\x68\x69\xc\x7e\x5f\x7f", 7));
+}
+
 int main(int argc, char **argv) {
     TestInfo tests[] = {
         { "Communication Initialization", test_communication_init },
         { "Communication receive", test_communication_receive },
+        { "Communication send", test_communication_send },
         { 0, 0 }
     };
 
