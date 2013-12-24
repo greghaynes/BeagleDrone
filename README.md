@@ -21,6 +21,12 @@ of RAM and plenty of peripherals. This allows for modern state estimation and
 other algorithms to be used without the need for a second computer, or second
 code base.
 
+## Communication
+
+We primarily communicate on irc in #beagledrone @ freenode. Please join in at
+any time!
+
+
 # Firmware
 
 The firmware directory contains the code which runs on the beagleboard.
