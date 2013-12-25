@@ -15,10 +15,6 @@
 
 static CommunicationState *_communicationState;
 
-int CommunicationTryDecodeFrame(CommunicationState *com) {
-    return 0;
-}
-
 void CommunicationCheckForFrame(CommunicationState *com) {
     char ch;
     unsigned short crc_check = 0;

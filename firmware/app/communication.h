@@ -20,14 +20,6 @@ typedef struct CommunicationState
     RingBuffer uart_out_ringbuffer;
 } CommunicationState;
 
-/*
- * Clears deframed_bufer if a frame is found and decodes it into
- * deframed_buffer.
- *
- * returns 0 if no frame is found, 1 otherwise.
- */
-int CommunicationTryDecodeFrame(CommunicationState *com);
-
 // Send data in afproto frame
 void CommunicationSend(CommunicationState *com, const char *data,
                        unsigned int data_size);

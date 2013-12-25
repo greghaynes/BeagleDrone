@@ -47,6 +47,19 @@ void RingBufferPush(RingBuffer *b, char ch) {
         ++b->used_start;
 }
 
+void RingBufferPushBack(RingBuffer *b, char ch) {
+    if(b->used_start == 0)
+        b->used_start = b->size - 1;
+    else
+        --b->used_start;
+
+    b->data[b->used_start] = ch;
+}
+
+void RingBufferPushString(RingBuffer *b, char *string) {
+    while(*string) RingBufferPush(b, *(string++));
+}
+
 int RingBufferPop(RingBuffer *b, char *dst) {
     if(b->used_end == b->used_start) return 0;
 
