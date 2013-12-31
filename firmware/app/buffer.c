@@ -35,6 +35,10 @@ void RingBufferInit(RingBuffer *b, char *data, unsigned int size) {
     b->size = size;
 }
 
+int RingBufferIsEmpty(RingBuffer *b) {
+    return b->used_end == b->used_start;
+}
+
 void RingBufferPush(RingBuffer *b, char ch) {
     if(b->used_end == b->size) {
         b->data[0] = ch;

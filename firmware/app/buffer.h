@@ -26,6 +26,9 @@ int BufferAppend(Buffer *b, char ch);
 
 void RingBufferInit(RingBuffer *b, char *data, unsigned int size);
 
+/* Returns zero if not empty, otherwise nonzero */
+int RingBufferIsEmpty(RingBuffer *b);
+
 void RingBufferPush(RingBuffer *b, char ch);
 
 /* Push onto opposite end of RingBufferPush */

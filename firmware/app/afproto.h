@@ -1,6 +1,10 @@
 #ifndef AFPOTO_H
 #define AFPOTO_H
 
+#define AFPROTO_START_BYTE 0x7D
+#define AFPROTO_ESC_BYTE 0x7E
+#define AFPROTO_END_BYTE 0x7F
+
 /*
  * Implements Afproto v3 protocol using RingBuffers
  */
@@ -13,7 +17,7 @@
  * If a frame is found, all data preceding and including frame is removed
  * from buff
  */
-void afproto_ringbuffer_pop_frame(RingBuffer *input, Buffer *output);
+int afproto_ringbuffer_pop_frame(RingBuffer *input, Buffer *output);
 
 /*
  * Encapsulate input in afproto frame and push into output

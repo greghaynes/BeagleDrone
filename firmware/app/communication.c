@@ -15,73 +15,18 @@
 
 static CommunicationState *_communicationState;
 
-void CommunicationCheckForFrame(CommunicationState *com) {
-    char ch;
-    unsigned short crc_check = 0;
-    int prev_escape = 0;
-    int i;
-    while(RingBufferPop(&com->uart_in_ringbuffer, &ch) &&
-            ch != AFPROTO_START_BYTE);
-    // We never saw a start byte
-    if(ch != AFPROTO_START_BYTE)
-        return;
+// Try and decode a frame from com state
+void CommunicationHandleFrame(CommunicationState *com) {
+    int keep_decoding = 1;
 
-    BufferClear(&com->deframed_buffer);
-    while(RingBufferPop(&com->uart_in_ringbuffer, &ch)) {
-        if(prev_escape) {
-            ch ^= 0x20;
-            prev_escape = 0;
-        }
-
-        if(ch == AFPROTO_ESC_BYTE) {
-            prev_escape = 1;
-        } else {
-            if(!BufferAppend(&com->deframed_buffer, ch)) {
-                // We ran out of space!
-                BufferClear(&com->deframed_buffer);
-
-                // The previous data must be invalid, but there could still
-                // be a valid frame in the input buffer
-                if(ch == AFPROTO_START_BYTE)
-                    RingBufferPush(&com->uart_in_ringbuffer, ch);
-
-                CommunicationCheckForFrame(com);
-            }
-
-            if(com->deframed_buffer.used >= 2 && ch != AFPROTO_END_BYTE)
-                crc_check = crc16_floating(
-                        com->deframed_data[com->deframed_buffer.used-2],
-                        crc_check);
-
-            if(ch == AFPROTO_END_BYTE)
-                break;
-        }
-    }
-
-    if(com->deframed_buffer.used < 2)
-        return;
-
-    // We never saw an end byte
-    // If our callers logic is correct, we should never hit this branch
-    if(ch != AFPROTO_END_BYTE) {
-        LogCString(LOG_LEVEL_ERROR,
-                "Check for frame called but no afproto end byte found");
-        for(i = 0;i < com->deframed_buffer.used;++i)
-            RingBufferPush(&com->uart_in_ringbuffer, com->deframed_data[i]);
+    while(keep_decoding && !RingBufferIsEmpty(&com->uart_in_ringbuffer)) {
         BufferClear(&com->deframed_buffer);
-        return;
+        keep_decoding = afproto_ringbuffer_pop_frame(&com->uart_in_ringbuffer,
+                                                     &com->deframed_buffer);
+
+        if(com->deframed_buffer.used > 0)
+            CommandHandleRaw(com->deframed_buffer.data);
     }
-
-    unsigned short sent_crc = *(unsigned short*)&com->deframed_data[
-        com->deframed_buffer.used-2];
-
-    if(sent_crc != crc_check) {
-        LogCString(LOG_LEVEL_NOTICE,
-                "Received afproto frame with invalid CRC");
-        return;
-    }
-
-    CommandHandleRaw(com->deframed_data);
 }
 
 void CommunicationCheckWrite(CommunicationState *com) {
@@ -197,7 +142,7 @@ void CommunicationGotChar(CommunicationState *com, char ch) {
 
     // We might have hit the end of a frame
     if(ch == AFPROTO_END_BYTE)
-        CommunicationCheckForFrame(com);
+        CommunicationHandleFrame(com);
 }
 
 void CommunicationInit(CommunicationState *com) {

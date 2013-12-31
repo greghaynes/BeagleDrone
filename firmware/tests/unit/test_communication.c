@@ -84,11 +84,13 @@ void test_communication_receive(void) {
     CommunicationInit(&s);
     RingBufferPushCString(&state.in_buff, "\x7d\x68\x69\xc\x7e\x5f\x7f");
     state.int_handler();
-    assert(!strncmp(command_handle_raw_last_data, "hi", 2));
+    assert(command_handle_raw_last_data &&
+           !strncmp(command_handle_raw_last_data, "hi", 2));
     command_handle_raw_last_data = 0;
     RingBufferPushCString(&state.in_buff, "\x7d\x68\x69\xc\x7e\x5f\x7f");
     state.int_handler();
-    assert(!strncmp(command_handle_raw_last_data, "hi", 2));
+    assert(!command_handle_raw_last_data &&
+           strncmp(command_handle_raw_last_data, "hi", 2));
 }
 
 void test_communication_send(void) {
