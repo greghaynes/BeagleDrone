@@ -39,6 +39,15 @@ int RingBufferIsEmpty(RingBuffer *b) {
     return b->used_end == b->used_start;
 }
 
+int RingBufferSize(RingBuffer *b) {
+    if(b->used_start == b->used_end)
+        return 0;
+    else if(b->used_start > b->used_end)
+        return b->used_start + (b->size - b->used_end);
+    else
+        return b->used_end - b->used_start;
+}
+
 void RingBufferPush(RingBuffer *b, char ch) {
     if(b->used_end == b->size) {
         b->data[0] = ch;
@@ -60,7 +69,7 @@ void RingBufferPushBack(RingBuffer *b, char ch) {
     b->data[b->used_start] = ch;
 }
 
-void RingBufferPushString(RingBuffer *b, char *string) {
+void RingBufferPushString(RingBuffer *b, const char *string) {
     while(*string) RingBufferPush(b, *(string++));
 }
 

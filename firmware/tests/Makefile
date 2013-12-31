@@ -7,19 +7,24 @@ FUNC_CFLAGS=$(CFLAGS) -Ifunctional/
 test: test_unit test_functional
 
 test_unit:\
+	test_afproto\
 	test_buffer\
 	test_state\
 	test_quaternion\
 	test_communication\
-   	test_command\
-	test_motorhelp\
-	test_afproto
+	test_command\
+	test_motorhelp
 
 test_functional: test_boot test_commands
 
+test_afproto:
+	$(CC) $(UNIT_CFLAGS) ../app/afproto.c ../app/buffer.c ../app/crc16.c \
+	    test_help.c unit/test_afproto.c -o unit/test_afproto $(LDFLAGS) && \
+	./unit/test_afproto
+
 test_buffer:
 	$(CC) $(UNIT_CFLAGS) ../app/buffer.c test_help.c unit/test_buffer.c \
-	   	-o unit/test_buffer $(LDFLAGS) && \
+	    -o unit/test_buffer $(LDFLAGS) && \
 	./unit/test_buffer
 
 test_state:
@@ -35,7 +40,7 @@ test_quaternion:
 test_communication:
 	$(CC) $(UNIT_CFLAGS) ../app/afproto.c ../app/buffer.c ../app/crc16.c \
 		../app/communication.c test_help.c unit/test_communication.c \
-	   	-o unit/test_communication $(LDFLAGS) && \
+	    -o unit/test_communication $(LDFLAGS) && \
 	./unit/test_communication
 
 test_command:
@@ -47,11 +52,6 @@ test_motorhelp:
 	$(CC) $(UNIT_CFLAGS) ../app/motorhelp.c unit/test_motorhelp.c test_help.c \
 		-o unit/test_motorhelp $(LDFLAGS) && \
 	./unit/test_motorhelp
-
-test_afproto:
-	$(CC) $(UNIT_CFLAGS) ../app/afproto.c ../app/buffer.c unit/test_afproto.c \
-		-o unit/test_afproto $(LDFLAGS) && \
-	./unit/test_afproto
 
 test_boot:
 	$(CC) $(FUNC_CFLAGS) ../app/buffer.c ../app/command.c \

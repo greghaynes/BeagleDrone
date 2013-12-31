@@ -11,7 +11,7 @@
 
 #include "app/buffer.h"
 
-/* 
+/*
  * Given a ringbuffer, produce decoded frame nearest the start, if possible.
  *
  * If a frame is found, all data preceding and including frame is removed
