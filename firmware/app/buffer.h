@@ -26,6 +26,8 @@ int BufferAppend(Buffer *b, char ch);
 
 void RingBufferInit(RingBuffer *b, char *data, unsigned int size);
 
+void RingBufferClear(RingBuffer *b);
+
 /* Returns zero if not empty, otherwise nonzero */
 int RingBufferIsEmpty(RingBuffer *b);
 
