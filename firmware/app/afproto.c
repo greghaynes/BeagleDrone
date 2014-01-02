@@ -20,9 +20,11 @@ int afproto_ringbuffer_pop_frame(RingBuffer *input, Buffer *output) {
             prev_escape = 0;
         }
 
-        if(ch == AFPROTO_ESC_BYTE) {
+        if(ch == AFPROTO_ESC_BYTE)
             prev_escape = 1;
-        } else {
+        else if (ch == AFPROTO_END_BYTE)
+            break;
+        else {
             if(in_iter_cnt >= 2 && !BufferAppend(output, prev_chars[0])) {
                 // We ran out of space!
 
@@ -34,10 +36,11 @@ int afproto_ringbuffer_pop_frame(RingBuffer *input, Buffer *output) {
             prev_chars[1] = ch;
             ++in_iter_cnt;
 
-            if(ch == AFPROTO_END_BYTE)
-                break;
         }
     }
+
+    if(ch != AFPROTO_END_BYTE)
+        BufferClear(output);
 
     return !RingBufferIsEmpty(input);
 }
