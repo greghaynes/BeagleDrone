@@ -2,6 +2,12 @@
 #include "buffer.h"
 #include "crc16.h"
 
+int afproto_byte_needs_escaping(char ch) {
+    return ch == AFPROTO_START_BYTE ||
+           ch == AFPROTO_ESC_BYTE ||
+           ch == AFPROTO_END_BYTE;
+}
+
 int afproto_ringbuffer_pop_frame(RingBuffer *input, Buffer *output) {
     char ch, prev_chars[2];
     int prev_escape = 0, in_iter_cnt = 0;
@@ -35,27 +41,28 @@ int afproto_ringbuffer_pop_frame(RingBuffer *input, Buffer *output) {
             prev_chars[0] = prev_chars[1];
             prev_chars[1] = ch;
             ++in_iter_cnt;
-
         }
     }
 
     if(ch != AFPROTO_END_BYTE)
         BufferClear(output);
-
+    else {
+        unsigned short crc = crc16_buff(output->data, in_iter_cnt - 2);
+        if(crc != *(unsigned short*)prev_chars)
+            BufferClear(output);
+    }
     return !RingBufferIsEmpty(input);
 }
 
 void afproto_ringbuffer_push_frame(RingBuffer *output, RingBuffer *input) {
     // TODO check avail space in output
     char ch;
-    short crc;
+    short crc = 0;
 
     RingBufferPush(output, AFPROTO_START_BYTE);
 
     while(RingBufferPop(input, &ch)) {
-        if (ch == AFPROTO_START_BYTE ||
-                   ch == AFPROTO_ESC_BYTE ||
-                   ch == AFPROTO_END_BYTE) {
+        if (afproto_byte_needs_escaping(ch)) {
             RingBufferPush(output, AFPROTO_ESC_BYTE);
             crc = crc16_floating(ch, crc);
             RingBufferPush(output, ch ^ 0x20);
@@ -67,8 +74,14 @@ void afproto_ringbuffer_push_frame(RingBuffer *output, RingBuffer *input) {
 
     // Write the CRC
     char *crc_str = (char*)&crc;
-    RingBufferPush(output, crc_str[0]);
-    RingBufferPush(output, crc_str[1]);
+    int i;
+    for(i=0;i < 2;++i) {
+        if(afproto_byte_needs_escaping(crc_str[i])) {
+            RingBufferPush(output, AFPROTO_ESC_BYTE);
+            RingBufferPush(output, crc_str[i] ^ 0x20);
+        } else
+            RingBufferPush(output, crc_str[i]);
+    }
 
     RingBufferPush(output, AFPROTO_END_BYTE);
 }
