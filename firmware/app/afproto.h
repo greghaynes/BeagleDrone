@@ -14,8 +14,7 @@
 /*
  * Given a ringbuffer, produce decoded frame nearest the start, if possible.
  *
- * If a frame is found, all data preceding and including frame is removed
- * from buff
+ * Returns 1 if should be called again to check for another frame, 0 otherwise
  */
 int afproto_ringbuffer_pop_frame(RingBuffer *input, Buffer *output);
 

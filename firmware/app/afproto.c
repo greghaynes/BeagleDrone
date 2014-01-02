@@ -3,8 +3,8 @@
 #include "crc16.h"
 
 int afproto_ringbuffer_pop_frame(RingBuffer *input, Buffer *output) {
-    char ch;
-    int prev_escape = 0;
+    char ch, prev_chars[2];
+    int prev_escape = 0, in_iter_cnt = 0;
 
     // Pop until we find a start byte;
     while(RingBufferPop(input, &ch) &&
@@ -23,18 +23,23 @@ int afproto_ringbuffer_pop_frame(RingBuffer *input, Buffer *output) {
         if(ch == AFPROTO_ESC_BYTE) {
             prev_escape = 1;
         } else {
-            if(!BufferAppend(output, ch)) {
+            if(in_iter_cnt >= 2 && !BufferAppend(output, prev_chars[0])) {
                 // We ran out of space!
 
                 // TODO return data to original buffer
                 return 1;
             }
 
+            prev_chars[0] = prev_chars[1];
+            prev_chars[1] = ch;
+            ++in_iter_cnt;
+
             if(ch == AFPROTO_END_BYTE)
                 break;
         }
     }
-    return 1;
+
+    return !RingBufferIsEmpty(input);
 }
 
 void afproto_ringbuffer_push_frame(RingBuffer *output, RingBuffer *input) {

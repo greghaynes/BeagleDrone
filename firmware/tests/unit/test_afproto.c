@@ -20,11 +20,19 @@ int escaped_bytes_in(const char *str) {
 }
 
 void test_pop_frame(void) {
-    char in_data[256];
-    char out_data[512];
-    RingBuffer rb_in, rb_out;
-    RingBufferInit(&rb_in, in_data, 256);
-    RingBufferInit(&rb_out, out_data, 512);
+    char in_data[512];
+    char out_data[256];
+
+    RingBuffer rb_in;
+    Buffer output;
+
+    RingBufferInit(&rb_in, in_data, 512);
+    BufferInit(&output, out_data, 256);
+
+    RingBufferPushString(&rb_in, "\x7d\x48\x65\x6c\x6c\x6f\xd6\xcb");
+
+    assert(!afproto_ringbuffer_pop_frame(&rb_in, &output));
+    assert(!strcmp(out_data, "Hello"));
 }
 
 void test_push_frame(void) {
