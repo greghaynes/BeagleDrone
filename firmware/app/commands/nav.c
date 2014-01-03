@@ -13,7 +13,9 @@ void CommandsNavInit(void) {
 void CommandsNavSetRot(CommandsNavHeader *hdr, const char *data) {
 }
 
-void CommandsNavHandler(unsigned char type_id, const char *data) {
+void CommandsNavHandler(unsigned char type_id,
+                        const char *data,
+                        unsigned int size) {
     CommandsNavHeader *hdr = (CommandsNavHeader*)data;
     data += 1;
     switch(hdr->nav_cmd) {

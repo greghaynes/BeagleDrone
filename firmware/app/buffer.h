@@ -26,7 +26,19 @@ int BufferAppend(Buffer *b, char ch);
 
 void RingBufferInit(RingBuffer *b, char *data, unsigned int size);
 
+void RingBufferClear(RingBuffer *b);
+
+/* Returns zero if not empty, otherwise nonzero */
+int RingBufferIsEmpty(RingBuffer *b);
+
+int RingBufferSize(RingBuffer *b);
+
 void RingBufferPush(RingBuffer *b, char ch);
+
+/* Push onto opposite end of RingBufferPush */
+void RingBufferPushBack(RingBuffer *b, char ch);
+
+void RingBufferPushString(RingBuffer *b, const char *data);
 
 /* Pops one char, zero if buffer is empty, 1 otherwise */
 int RingBufferPop(RingBuffer *b, char *dst);

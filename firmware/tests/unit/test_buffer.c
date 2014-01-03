@@ -52,6 +52,41 @@ void test_ring_buffer_push(void) {
     assert(!strncmp(b.data, "ccbbb", 5));
 }
 
+void test_ring_buffer_push_back(void) {
+    RingBuffer b;
+    char data[5];
+
+    RingBufferInit(&b, data, 5);
+    RingBufferPushBack(&b, 'a');
+    assert(b.data[4] == 'a');
+    assert(b.used_start == 4);
+    assert(b.used_end == 0);
+
+    RingBufferPushBack(&b, 'b');
+    assert(b.data[4] == 'a');
+    assert(b.data[3] == 'b');
+    assert(b.used_start == 3);
+    assert(b.used_end == 0);
+}
+
+void test_ring_buffer_push_string(void) {
+    RingBuffer b;
+    char data[5];
+
+    RingBufferInit(&b, data, 5);
+    RingBufferPushString(&b, "a");
+    assert(!strncmp(b.data, "a", 1));
+
+    RingBufferPushString(&b, "bbbb");
+    assert(!strncmp(b.data, "abbbb", 5));
+
+    RingBufferPushString(&b, "c");
+    assert(!strncmp(b.data, "cbbbb", 5));
+
+    RingBufferPushString(&b, "c");
+    assert(!strncmp(b.data, "ccbbb", 5));
+}
+
 void test_ring_buffer_pop(void) {
     RingBuffer b;
     char data[6];
@@ -70,6 +105,8 @@ int main(int argc, char **argv) {
         { "Buffer append", test_buffer_append },
         { "Buffer set", test_buffer_set },
         { "Ring buffer push", test_ring_buffer_push },
+        { "Ring buffer push back", test_ring_buffer_push_back },
+        { "Ring buffer push string", test_ring_buffer_push_string },
         { "Ring buffer pop", test_ring_buffer_pop },
         { 0, 0 }
     };

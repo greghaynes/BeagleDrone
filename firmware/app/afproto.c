@@ -1,149 +1,89 @@
 #include "afproto.h"
+#include "buffer.h"
 #include "crc16.h"
 
-/*
- * Args:
- *   src      : source raw data
- *   src_len  : length of raw data
- *   dest     : destination buffer, must be at least length of src buffer
- *   dest_len : length of data in destination buffer, unless error returned
- * Return values:
- *   -3   : Destination buffer too small
- *   -2   : Invalid CRC
- *   -1   : No valid message found
- *   >= 0 : Message ended at src + return value
- * If  an error is returned, dest_len is set to the amount of data which can
- * be (and should be) discarded from the start of the src buffer.
- */
-int afproto_get_data(const char *src,
-    unsigned int src_len,
-    char *dest,
-    unsigned int *dest_len) {
-    const char *src_start = src;
-    const char *src_end = src + src_len;
-    const char *dest_start = dest;
-    short crc_check = 0;
-
-    // Advance src to start byte
-    while(src < src_end && *src != AFPROTO_START_BYTE) ++src;
-    // Set our error return val for dest_len
-    *dest_len = src - src_start;
-    if(src >= src_end)
-        return -1;
-
-    // Loop through the data
-    ++src;
-    int prev_escape = 0;
-    char orig_char;
-    while(src < src_end - 2) {
-        if(prev_escape) {
-            prev_escape = 0;
-            orig_char = (*src) ^ 0x20;
-            crc_check = crc16_floating(orig_char, crc_check);
-            *(dest++) = orig_char;
-        }
-        else if (*src == AFPROTO_ESC_BYTE) {
-            prev_escape = 1;
-        }
-        else {
-            orig_char = *src;
-            crc_check = crc16_floating(orig_char, crc_check);
-            *(dest++) = orig_char;
-        }
-        ++src;
-    }
-
-    // Check that we actually hit the end
-    if(src[2] != AFPROTO_END_BYTE)
-        return -1;
-
-    // Check CRC
-    short crc = *((short*)src);
-    src += 3;
-    if(crc != crc_check) {
-        *dest_len = src - src_start;
-        return -2;
-    }
-
-    *dest_len = dest - dest_start;
-    return (src - src_start) - 1;
+int afproto_byte_needs_escaping(char ch) {
+    return ch == AFPROTO_START_BYTE ||
+           ch == AFPROTO_ESC_BYTE ||
+           ch == AFPROTO_END_BYTE;
 }
 
-int afproto_frame_data(const char *src,
-    unsigned int src_len,
-    char *dest,
-    unsigned int *dest_len) {
-    const char *src_end = src + src_len;
-    const char *dest_start = dest;
-    short crc = 0;
+int afproto_ringbuffer_pop_frame(RingBuffer *input, Buffer *output) {
+    char ch, prev_chars[2];
+    int prev_escape = 0, in_iter_cnt = 0;
 
-    *(dest++) = AFPROTO_START_BYTE;
+    // Pop until we find a start byte;
+    while(RingBufferPop(input, &ch) &&
+            ch != AFPROTO_START_BYTE);
 
-    int prev_escape = 0;
-    while(src < src_end) {
+    // We never saw a start byte
+    if(ch != AFPROTO_START_BYTE)
+        return 0;
+
+    while(RingBufferPop(input, &ch)) {
+        if (ch == AFPROTO_END_BYTE)
+            break;
+
         if(prev_escape) {
+            ch ^= 0x20;
             prev_escape = 0;
-            crc = crc16_floating(*src, crc);
-            *(dest++) = *(src) ^ 0x20;
         }
-        else if (*src == AFPROTO_START_BYTE || *src == AFPROTO_ESC_BYTE) {
+
+        if(ch == AFPROTO_ESC_BYTE)
             prev_escape = 1;
-            *(dest++) = AFPROTO_ESC_BYTE;
-            continue;
-        }
         else {
-            crc = crc16_floating(*src, crc);
-            *(dest++) = *src;
-        }
-        ++src;
-    }
+            if(in_iter_cnt >= 2 && !BufferAppend(output, prev_chars[0])) {
+                // We ran out of space!
 
-    // Set the CRC
-    // Dummy code
-    *((short*)dest) = crc;
-    dest += 2;
-
-    *(dest++) = AFPROTO_END_BYTE;
-    *dest_len = dest - dest_start - 1;
-    return 0;
-}
-
-#ifdef AFPROTO_TEST
-#include <stdio.h>
-
-int main(int argc, char **argv) {
-    char orig_msg[257];
-    char buff[512];
-    unsigned int write_len;
-
-    int size;
-    for(size = 0;size < 256;++size) {
-        printf("Testing string of %d bytes..", size);
-        int i;
-        for(i = 0;i < size;++i)
-            orig_msg[i]=(char)i;
-        orig_msg[size] = 0;
-
-        int ret;
-        if((ret = afproto_frame_data(orig_msg, size, buff, &write_len)) < 0)
-            printf("Data framing error %d!\n", ret);
-        //printf("Frame is %d bytes long\n", write_len);
-        if((ret = afproto_get_data(buff, write_len, buff, &write_len)) < 0)
-            printf("Get data error %d!\n", ret);
-
-        for(i = 0;i < size;++i) {
-            if(buff[i] != orig_msg[i]) {
-                printf("Error, %d\n", i);
+                // TODO return data to original buffer
                 return 1;
             }
-        }
 
-        if(write_len != size) {
-            printf("Length not properly detected, got %d\n", write_len);
-            return 1;
+            prev_chars[0] = prev_chars[1];
+            prev_chars[1] = ch;
+            ++in_iter_cnt;
         }
-        printf("Win!\n");
     }
-    return 0;
+
+    if(ch != AFPROTO_END_BYTE)
+        BufferClear(output);
+    else {
+        unsigned short crc = crc16_buff(output->data, in_iter_cnt - 2);
+        if(crc != *(unsigned short*)prev_chars)
+            BufferClear(output);
+    }
+    return !RingBufferIsEmpty(input);
 }
-#endif
+
+void afproto_ringbuffer_push_frame(RingBuffer *output, RingBuffer *input) {
+    // TODO check avail space in output
+    char ch;
+    short crc = 0;
+
+    RingBufferPush(output, AFPROTO_START_BYTE);
+
+    while(RingBufferPop(input, &ch)) {
+        if (afproto_byte_needs_escaping(ch)) {
+            RingBufferPush(output, AFPROTO_ESC_BYTE);
+            crc = crc16_floating(ch, crc);
+            RingBufferPush(output, ch ^ 0x20);
+        } else {
+            crc = crc16_floating(ch, crc);
+            RingBufferPush(output, ch);
+        }
+    }
+
+    // Write the CRC
+    char *crc_str = (char*)&crc;
+    int i;
+    for(i=0;i < 2;++i) {
+        if(afproto_byte_needs_escaping(crc_str[i])) {
+            RingBufferPush(output, AFPROTO_ESC_BYTE);
+            RingBufferPush(output, crc_str[i] ^ 0x20);
+        } else
+            RingBufferPush(output, crc_str[i]);
+    }
+
+    RingBufferPush(output, AFPROTO_END_BYTE);
+}
+
