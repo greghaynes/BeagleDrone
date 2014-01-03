@@ -66,6 +66,23 @@ void test_pop_frame(void) {
     assert(!strncmp(out_data, "Hello", output.used));
 }
 
+void test_pop_escaped_crc(void) {
+    char in_data[512];
+    char out_data[256];
+
+    RingBuffer rb_in;
+    Buffer output;
+
+    RingBufferInit(&rb_in, in_data, 512);
+    BufferInit(&output, out_data, 256);
+
+    RingBufferPushString(&rb_in, "\x7d\x68\x69\x0c\x7e\x5f\x7f");
+    assert(!afproto_ringbuffer_pop_frame(&rb_in, &output));
+    assert(output.used == strlen("hi"));
+    assert(!strncmp(out_data, "hi", output.used));
+}
+
+
 void test_push_frame(void) {
     char in_data[256];
     char out_data[512];
@@ -113,6 +130,7 @@ int main(int argc, char **argv) {
         { "Pop frame", test_pop_frame },
         { "Pop no end byte", test_pop_no_end_byte },
         { "Pop invalid crc", test_pop_invalid_crc },
+        { "Pop escaped crc", test_pop_escaped_crc },
         { 0, 0 }
     };
 
