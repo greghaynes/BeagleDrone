@@ -1,9 +1,9 @@
 BeagleDrone
 ==============
 
-An Open Source drone based on the BeagleBone.
+An Open Source drone based on the BeagleBone (black).
 
-![Build Status](https://travis-ci.org/greghaynes/BeagleDrone.png)
+[![Build Status](https://travis-ci.org/greghaynes/BeagleDrone.png)](https://travis-ci.org/greghaynes/BeagleDrone)
 
 ## Why
 
@@ -16,10 +16,16 @@ An alternative solution is to develop the drone control code on a powerful
 enough platform that only one computer is needed. This is generally avoided
 due to the difficulty of building up a code base for modern powerful computers.
 
-The BeagleDrone is a drone built using the BeagleBone, a 720Mhz ARM with 256MB
-of RAM and plenty of peripherals. This allows for modern state estimation and
-other algorithms to be used without the need for a second computer, or second
-code base.
+The BeagleDrone is a drone which runs on the BeagleBone platforms (original and
+black). This allows for modern state estimation, tons of peripherals, and 
+boundless hacking potential without the need for a second computer, or even a
+second code base.
+
+## Communication
+
+We primarily communicate on irc in #beagledrone @ freenode. Please join in at
+any time!
+
 
 # Firmware
 

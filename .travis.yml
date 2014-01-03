@@ -1,5 +1,11 @@
 language: c
+branches:
+  only:
+    - master
 compiler:
   - gcc
   - clang
+notifications:
+  irc:
+    - "chat.freenode.net#beagledrone"
 script: cd firmware/tests && make
