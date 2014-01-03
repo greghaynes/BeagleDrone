@@ -21,11 +21,11 @@ void CommandSetHandler(unsigned char type_id, CommandHandler_t handler) {
     command_handlers[type_id] = handler;
 }
 
-void CommandHandleRaw(const char *data) {
+void CommandHandleRaw(const char *data, unsigned int size) {
     CommandTypeHeader *type_hdr = (CommandTypeHeader*)data;
     switch(type_hdr->type_id) {
         case COMMAND_TYPE_NAV:
-            CommandsNavHandler(type_hdr->type_id, data);
+            CommandsNavHandler(type_hdr->type_id, data, size);
             break;
         default:
             LogCString(LOG_LEVEL_ERROR, "Received invalid command id");

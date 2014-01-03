@@ -54,7 +54,7 @@ test_motorhelp:
 	./unit/test_motorhelp
 
 test_boot:
-	$(CC) $(FUNC_CFLAGS) ../app/buffer.c ../app/command.c \
+	$(CC) $(FUNC_CFLAGS) ../app/afproto.c ../app/buffer.c ../app/command.c \
 		../app/commands/nav.c ../app/communication.c ../app/crc16.c \
 		../app/log.c ../app/mathhelp.c ../app/quaternion.c ../app/state.c \
 		mock/uart_driver.c test_help.c functional/test_boot.c \
@@ -62,7 +62,7 @@ test_boot:
 	./functional/test_boot
 
 test_commands:
-	$(CC) $(FUNC_CFLAGS) ../app/buffer.c ../app/command.c \
+	$(CC) $(FUNC_CFLAGS) ../app/afproto.c ../app/buffer.c ../app/command.c \
 		../app/commands/nav.c ../app/communication.c ../app/crc16.c \
 		../app/log.c ../app/mathhelp.c ../app/quaternion.c ../app/state.c \
 		mock/uart_driver.c test_help.c functional/test_commands.c \

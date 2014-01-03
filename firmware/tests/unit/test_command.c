@@ -45,7 +45,7 @@ void test_command_handle_raw(void) {
     nav_handler_data = 0;
 
     const char *data = "\x02\x04\x03";
-    CommandHandleRaw(data);
+    CommandHandleRaw(data, 3);
     assert(last_log_level == 0xFF);
     assert(nav_handler_type_id == 0x02);
     assert(nav_handler_data == data);
@@ -58,7 +58,7 @@ void test_command_handle_raw_invalid(void) {
     nav_handler_data = 0;
 
     const char *data = "\x05\xFF\x00";
-    CommandHandleRaw(data);
+    CommandHandleRaw(data, 3);
     assert(last_log_level == 0x03);
     assert(nav_handler_type_id == 0xFF);
     assert(nav_handler_data == 0);

@@ -7,7 +7,9 @@ typedef enum CommandsNavType {
 
 void CommandsNavInit(void);
 
-void CommandsNavHandler(unsigned char type_id, const char *data);
+void CommandsNavHandler(unsigned char type_id,
+                        const char *data,
+                        unsigned int size);
 
 #endif
 

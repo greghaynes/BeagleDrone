@@ -25,7 +25,8 @@ void CommunicationHandleFrame(CommunicationState *com) {
                                                      &com->deframed_buffer);
 
         if(com->deframed_buffer.used > 0)
-            CommandHandleRaw(com->deframed_buffer.data);
+            CommandHandleRaw(com->deframed_buffer.data,
+                             com->deframed_buffer.used);
     }
 }
 

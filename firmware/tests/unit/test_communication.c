@@ -64,10 +64,12 @@ void UartSetInterruptHandler(unsigned int baseAdd, void (*fnHandler)(void)) {
 }
 
 static const char *command_handle_raw_last_data;
+static unsigned int *command_handle_raw_last_size;
 
-void CommandHandleRaw(const char *data)
+void CommandHandleRaw(const char *data, unsigned int size)
 {
     command_handle_raw_last_data = data;
+    command_handle_raw_last_size = size;
 }
 
 void test_communication_init(void) {
@@ -82,30 +84,34 @@ void test_communication_receive(void) {
     state_zero();
     CommunicationState s;
     CommunicationInit(&s);
-    RingBufferPushCString(&state.in_buff, "\x7d\x68\x69\xc\x7e\x5f\x7f");
+    RingBufferPushString(&state.in_buff, "\x7d\x68\x69\x0c\x7e\x5f\x7f");
     state.int_handler();
     assert(command_handle_raw_last_data &&
-           !strncmp(command_handle_raw_last_data, "hi", 2));
+           !strncmp(command_handle_raw_last_data, "hi",
+                    command_handle_raw_last_size));
     command_handle_raw_last_data = 0;
-    RingBufferPushCString(&state.in_buff, "\x7d\x68\x69\xc\x7e\x5f\x7f");
+    RingBufferPushString(&state.in_buff, "\x7d\x68\x69\x0c\x7e\x5f\x7f");
     state.int_handler();
-    assert(!command_handle_raw_last_data &&
-           strncmp(command_handle_raw_last_data, "hi", 2));
+    assert(command_handle_raw_last_data &&
+           !strncmp(command_handle_raw_last_data, "hi",
+                    command_handle_raw_last_size));
 }
 
+/*
 void test_communication_send(void) {
     state_zero();
     CommunicationState s;
     CommunicationInit(&s);
     CommunicationSend(&s, "hi", 2);
-    assert(!strncmp(s.uart_out_data, "\x7d\x68\x69\xc\x7e\x5f\x7f", 7));
+    assert(!strncmp(s.uart_out_data, "\x7d\x68\x69\x0c\x7e\x5f\x7f", 7));
 }
+*/
 
 int main(int argc, char **argv) {
     TestInfo tests[] = {
         { "Communication Initialization", test_communication_init },
         { "Communication receive", test_communication_receive },
-        { "Communication send", test_communication_send },
+    //    { "Communication send", test_communication_send },
         { 0, 0 }
     };
 
