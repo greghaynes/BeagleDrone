@@ -26,6 +26,14 @@ second code base.
 We primarily communicate on irc in #beagledrone @ freenode. Please join in at
 any time!
 
+## Ticket Tracker
+
+Open tickets can be found at https://github.com/greghaynes/BeagleDrone/issues?state=open
+
+Feel free to create tickets if you run into problems or would like to request
+a feature. Alternatively, join us in IRC (see above) to discuss a potential
+ticket.
+
 
 # Firmware
 
