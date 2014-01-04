@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Beagledrone : A BeagleBone based drone using 'bare metal' C" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Beagledrone</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/greghaynes/BeagleDrone">View on GitHub</a>
+
+          <h1 id="project_title">Beagledrone</h1>
+          <h2 id="project_tagline">A BeagleBone based drone using 'bare metal' C</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/greghaynes/BeagleDrone/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/greghaynes/BeagleDrone/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="beagledrone" class="anchor" href="#beagledrone"><span class="octicon octicon-link"></span></a>BeagleDrone</h1>
+
+<p>An Open Source drone based on the BeagleBone (black).</p>
+
+<p><a href="https://travis-ci.org/greghaynes/BeagleDrone"><img src="https://travis-ci.org/greghaynes/BeagleDrone.png" alt="Build Status"></a></p>
+
+<h2>
+<a name="why" class="anchor" href="#why"><span class="octicon octicon-link"></span></a>Why</h2>
+
+<p>Robotics projects, specifically drones, often need far more memory than a
+typical microcontroller can offer. This is often solved by using a second
+computer running a full modern operating system (such as linux). This causes a
+massive gain in complexity in both hardware in software.</p>
+
+<p>An alternative solution is to develop the drone control code on a powerful
+enough platform that only one computer is needed. This is generally avoided
+due to the difficulty of building up a code base for modern powerful computers.</p>
+
+<p>The BeagleDrone is a drone which runs on the BeagleBone platforms (original and
+black). This allows for modern state estimation, tons of peripherals, and 
+boundless hacking potential without the need for a second computer, or even a
+second code base.</p>
+
+<h2>
+<a name="communication" class="anchor" href="#communication"><span class="octicon octicon-link"></span></a>Communication</h2>
+
+<p>We primarily communicate on irc in #beagledrone @ freenode. Please join in at
+any time!</p>
+
+<h2>
+<a name="ticket-tracker" class="anchor" href="#ticket-tracker"><span class="octicon octicon-link"></span></a>Ticket Tracker</h2>
+
+<p>Open tickets can be found at <a href="https://github.com/greghaynes/BeagleDrone/issues?state=open">https://github.com/greghaynes/BeagleDrone/issues?state=open</a></p>
+
+<p>Feel free to create tickets if you run into problems or would like to request
+a feature. Alternatively, join us in IRC (see above) to discuss a potential
+ticket.</p>
+
+<h1>
+<a name="firmware" class="anchor" href="#firmware"><span class="octicon octicon-link"></span></a>Firmware</h1>
+
+<p>The firmware directory contains the code which runs on the beagleboard.</p>
+
+<h2>
+<a name="dependencies" class="anchor" href="#dependencies"><span class="octicon octicon-link"></span></a>Dependencies</h2>
+
+<p>You require make and an gcc eabi arm cross compiler toolchain to build this
+project. Although any method of obtaining the arm-eabi will work equally well,
+below are the recommended methods for obtaining the toolchain.</p>
+
+<h2>
+<a name="toolchain" class="anchor" href="#toolchain"><span class="octicon octicon-link"></span></a>Toolchain</h2>
+
+<p>Please visit <a href="https://launchpad.net/gcc-arm-embedded">https://launchpad.net/gcc-arm-embedded</a> to obtain an arm toolchain
+for your platform. Ubuntu users may want to instead visit
+<a href="https://launchpad.net/%7Eterry.guo/+archive/gcc-arm-embedded">https://launchpad.net/~terry.guo/+archive/gcc-arm-embedded</a> for a package
+installation.</p>
+
+<h2>
+<a name="building" class="anchor" href="#building"><span class="octicon octicon-link"></span></a>Building</h2>
+
+<p>To build the package make sure the arm-none-eabi-* tools are in your PATH.</p>
+
+<p>Running the command <code>make</code> will create a boot.bin, suitable for flashing</p>
+
+<h2>
+<a name="flashing" class="anchor" href="#flashing"><span class="octicon octicon-link"></span></a>Flashing</h2>
+
+<p>I have yet to find a pleasant method for flashing. Currently, I use an SD card
+with U-Boot (comes on standard beaglebone linux image). I run the <code>loady</code>
+command at the U-Boot prompt, and use yterminal protocol (via minicom) to
+send the boot.bin. I then execute <code>go 0x82000000</code> to run the binary.</p>
+
+<h2>
+<a name="testing" class="anchor" href="#testing"><span class="octicon octicon-link"></span></a>Testing</h2>
+
+<p>Change directory into firmware/tests. Run 'make'.</p>
+
+<h1>
+<a name="client" class="anchor" href="#client"><span class="octicon octicon-link"></span></a>Client</h1>
+
+<p>The client is run on a PC and can be used to communicated with the drone.</p>
+
+<h2>
+<a name="dependencies-1" class="anchor" href="#dependencies-1"><span class="octicon octicon-link"></span></a>Dependencies</h2>
+
+<p>Qt5, g++ and CMake are required to build and run the client;</p>
+
+<h2>
+<a name="building-1" class="anchor" href="#building-1"><span class="octicon octicon-link"></span></a>Building</h2>
+
+<p>To build the client run the following commands</p>
+
+<p><code>cd client; cmake .; make</code></p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Beagledrone maintained by <a href="https://github.com/greghaynes">greghaynes</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-46835189-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+
+  </body>
+</html>
