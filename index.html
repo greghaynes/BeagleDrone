@@ -36,11 +36,6 @@
 
 <p><a href="https://travis-ci.org/greghaynes/BeagleDrone"><img src="https://travis-ci.org/greghaynes/BeagleDrone.png" alt="Build Status"></a></p>
 
-<a name="communication" class="anchor" href="#communication"><span class="octicon octicon-link"></span></a>Communication</h2>
-
-<p>We primarily communicate on irc in #beagledrone @ freenode. Please join in at
-any time!</p>
-
 <h2>
 <a name="ticket-tracker" class="anchor" href="#ticket-tracker"><span class="octicon octicon-link"></span></a>Ticket Tracker</h2>
 
@@ -50,62 +45,6 @@ any time!</p>
 a feature. Alternatively, join us in IRC (see above) to discuss a potential
 ticket.</p>
 
-<h1>
-<a name="firmware" class="anchor" href="#firmware"><span class="octicon octicon-link"></span></a>Firmware</h1>
-
-<p>The firmware directory contains the code which runs on the beagleboard.</p>
-
-<h2>
-<a name="dependencies" class="anchor" href="#dependencies"><span class="octicon octicon-link"></span></a>Dependencies</h2>
-
-<p>You require make and an gcc eabi arm cross compiler toolchain to build this
-project. Although any method of obtaining the arm-eabi will work equally well,
-below are the recommended methods for obtaining the toolchain.</p>
-
-<h2>
-<a name="toolchain" class="anchor" href="#toolchain"><span class="octicon octicon-link"></span></a>Toolchain</h2>
-
-<p>Please visit <a href="https://launchpad.net/gcc-arm-embedded">https://launchpad.net/gcc-arm-embedded</a> to obtain an arm toolchain
-for your platform. Ubuntu users may want to instead visit
-<a href="https://launchpad.net/%7Eterry.guo/+archive/gcc-arm-embedded">https://launchpad.net/~terry.guo/+archive/gcc-arm-embedded</a> for a package
-installation.</p>
-
-<h2>
-<a name="building" class="anchor" href="#building"><span class="octicon octicon-link"></span></a>Building</h2>
-
-<p>To build the package make sure the arm-none-eabi-* tools are in your PATH.</p>
-
-<p>Running the command <code>make</code> will create a boot.bin, suitable for flashing</p>
-
-<h2>
-<a name="flashing" class="anchor" href="#flashing"><span class="octicon octicon-link"></span></a>Flashing</h2>
-
-<p>I have yet to find a pleasant method for flashing. Currently, I use an SD card
-with U-Boot (comes on standard beaglebone linux image). I run the <code>loady</code>
-command at the U-Boot prompt, and use yterminal protocol (via minicom) to
-send the boot.bin. I then execute <code>go 0x82000000</code> to run the binary.</p>
-
-<h2>
-<a name="testing" class="anchor" href="#testing"><span class="octicon octicon-link"></span></a>Testing</h2>
-
-<p>Change directory into firmware/tests. Run 'make'.</p>
-
-<h1>
-<a name="client" class="anchor" href="#client"><span class="octicon octicon-link"></span></a>Client</h1>
-
-<p>The client is run on a PC and can be used to communicated with the drone.</p>
-
-<h2>
-<a name="dependencies-1" class="anchor" href="#dependencies-1"><span class="octicon octicon-link"></span></a>Dependencies</h2>
-
-<p>Qt5, g++ and CMake are required to build and run the client;</p>
-
-<h2>
-<a name="building-1" class="anchor" href="#building-1"><span class="octicon octicon-link"></span></a>Building</h2>
-
-<p>To build the client run the following commands</p>
-
-<p><code>cd client; cmake .; make</code></p>
       </section>
     </div>
 
