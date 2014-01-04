@@ -1,39 +1,31 @@
 BeagleDrone
 ==============
 
-An Open Source drone based on the BeagleBone (black).
+An Open Source drone platform using the BeagleBone (black).
 
 [![Build Status](https://travis-ci.org/greghaynes/BeagleDrone.png)](https://travis-ci.org/greghaynes/BeagleDrone)
 
-## Why
+## Goals
 
-Robotics projects, specifically drones, often need far more memory than a
-typical microcontroller can offer. This is often solved by using a second
-computer running a full modern operating system (such as linux). This causes a
-massive gain in complexity in both hardware in software.
+We are developing a well tested drone control application which is able to be
+run independently of the target device. This will allow us to rapidly develop
+advanced control and state estimation techniques which we can have high
+confidence will work on target devices meeting predefined criteria.
 
-An alternative solution is to develop the drone control code on a powerful
-enough platform that only one computer is needed. This is generally avoided
-due to the difficulty of building up a code base for modern powerful computers.
+We also hope to develop a driver layer for this application to allow it to be
+run on the BeagleBone. This device should have enough computing and memory
+resources, as well as sufficient peripherals for most drone applications.
 
-The BeagleDrone is a drone which runs on the BeagleBone platforms (original and
-black). This allows for modern state estimation, tons of peripherals, and 
-boundless hacking potential without the need for a second computer, or even a
-second code base.
 
 ## Communication
 
 We primarily communicate on irc in #beagledrone @ freenode. Please join in at
 any time!
 
-## Ticket Tracker
 
-Open tickets can be found at https://github.com/greghaynes/BeagleDrone/issues?state=open
+## Developer Documentation
 
-Feel free to create tickets if you run into problems or would like to request
-a feature. Alternatively, join us in IRC (see above) to discuss a potential
-ticket.
-
+Information for developers can be found on our [wiki](https://github.com/greghaynes/BeagleDrone/wiki).
 
 # Firmware
 
