@@ -96,10 +96,6 @@ static void UARTIsr(void) {
     CommunicationISR(_communicationState);
 }
 
-static void CommunicationSendChar(CommunicationState *com, char ch) {
-    RingBufferPush(&com->uart_out_ringbuffer, ch);
-}
-
 void CommunicationSend(CommunicationState *com, const char *data,
                        unsigned int data_size) {
     if(data_size > COMMUNICATION_UART_OUT_BUFF_SIZE) {
@@ -108,32 +104,7 @@ void CommunicationSend(CommunicationState *com, const char *data,
         return;
     }
 
-    CommunicationSendChar(com, AFPROTO_START_BYTE);
-
-    unsigned int i;
-    short crc = 0;
-
-    int prev_escape = 0;
-    for(i = 0;i < data_size;++i) {
-        if(prev_escape) {
-            prev_escape = 0;
-            crc = crc16_floating(data[i], crc);
-            CommunicationSendChar(com, data[i] ^ 0x20);
-        } else if (data[i] == AFPROTO_START_BYTE ||
-                data[i] == AFPROTO_ESC_BYTE) {
-            prev_escape = 1;
-            CommunicationSendChar(com, AFPROTO_ESC_BYTE);
-            --i;
-        } else {
-            crc = crc16_floating(data[i], crc);
-            CommunicationSendChar(com, data[i]);
-        }
-    }
-
-    char *crc_ch = (char*)&crc;
-    CommunicationSendChar(com, crc_ch[1]);
-    CommunicationSendChar(com, crc_ch[0]);
-    CommunicationSendChar(com, AFPROTO_END_BYTE);
+    afproto_ringbuffer_push_frame(&com->uart_out_ringbuffer, data, data_size);
 
     UARTIntEnable(UART_CONSOLE_BASE, UART_INT_THR);
 }
