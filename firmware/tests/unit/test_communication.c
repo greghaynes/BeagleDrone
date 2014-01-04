@@ -64,7 +64,7 @@ void UartSetInterruptHandler(unsigned int baseAdd, void (*fnHandler)(void)) {
 }
 
 static const char *command_handle_raw_last_data;
-static unsigned int *command_handle_raw_last_size;
+static unsigned int command_handle_raw_last_size;
 
 void CommandHandleRaw(const char *data, unsigned int size)
 {
@@ -97,7 +97,6 @@ void test_communication_receive(void) {
                     command_handle_raw_last_size));
 }
 
-/*
 void test_communication_send(void) {
     state_zero();
     CommunicationState s;
@@ -105,13 +104,12 @@ void test_communication_send(void) {
     CommunicationSend(&s, "hi", 2);
     assert(!strncmp(s.uart_out_data, "\x7d\x68\x69\x0c\x7e\x5f\x7f", 7));
 }
-*/
 
 int main(int argc, char **argv) {
     TestInfo tests[] = {
         { "Communication Initialization", test_communication_init },
         { "Communication receive", test_communication_receive },
-    //    { "Communication send", test_communication_send },
+        { "Communication send", test_communication_send },
         { 0, 0 }
     };
 

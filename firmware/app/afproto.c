@@ -55,14 +55,18 @@ int afproto_ringbuffer_pop_frame(RingBuffer *input, Buffer *output) {
     return !RingBufferIsEmpty(input);
 }
 
-void afproto_ringbuffer_push_frame(RingBuffer *output, RingBuffer *input) {
+void afproto_ringbuffer_push_frame(RingBuffer *output,
+                                   const char *data,
+                                   unsigned int size) {
     // TODO check avail space in output
+    const char *input_iter = data;
+    const char *input_end = data + size;
     char ch;
     short crc = 0;
 
     RingBufferPush(output, AFPROTO_START_BYTE);
 
-    while(RingBufferPop(input, &ch)) {
+    while(input_iter != input_end && (ch = *(input_iter++))) {
         if (afproto_byte_needs_escaping(ch)) {
             RingBufferPush(output, AFPROTO_ESC_BYTE);
             crc = crc16_floating(ch, crc);

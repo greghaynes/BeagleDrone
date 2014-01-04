@@ -24,6 +24,8 @@ int afproto_ringbuffer_pop_frame(RingBuffer *input, Buffer *output);
  * If an error occured (such as full buff), the size of buff will be
  * unmodified. Note that even an empty afproto frame has non zero size.
  */
-void afproto_ringbuffer_push_frame(RingBuffer *output, RingBuffer *input);
+void afproto_ringbuffer_push_frame(RingBuffer *output,
+                                   const char *data,
+                                   unsigned int size);
 
 #endif
