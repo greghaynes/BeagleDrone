@@ -2,7 +2,7 @@
 #define MOTOR_STATE_H
 
 #include "mathhelp.h"
-#include "state.h"
+#include "ahrs.h"
 
 typedef Vector4F MotorState;
 

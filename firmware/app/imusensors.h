@@ -1,7 +1,7 @@
 #ifndef IMU_SENSROS_H
 #define IMU_SENSORS_H
 
-#include "app/state.h"
+#include "app/ahrs.h"
 
 void IMUSensorsInit(void);
 const StateRotationalShort *IMUSensorsGetGyro(void);
