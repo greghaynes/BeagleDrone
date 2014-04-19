@@ -12,9 +12,10 @@ run independently of the target device. This will allow us to rapidly develop
 advanced control and state estimation techniques which we can have high
 confidence will work on target devices meeting predefined criteria.
 
-We also hope to develop a driver layer for this application to allow it to be
-run on the BeagleBone. This device should have enough computing and memory
-resources, as well as sufficient peripherals for most drone applications.
+We are also developing a driver layer for this application to allow it to be
+run on the BeagleBone Black. This device should have enough computing and
+memory resources, as well as sufficient peripherals for most drone
+applications.
 
 
 ## Communication
