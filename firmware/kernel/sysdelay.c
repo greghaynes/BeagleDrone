@@ -44,7 +44,6 @@
 #include "kernel/beaglebone.h"
 #include "kernel/interrupt.h"
 #include "kernel/drivers/dmtimer.h"
-#include "utils/delay.h"
 
 /******************************************************************************
 **                      INTERNAL MACRO DEFINITIONS
