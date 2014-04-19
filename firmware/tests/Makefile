@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -g -I../
+CFLAGS=-Wall -Werror -fdata-sections -funsigned-char -ffunction-sections -g -I../
 LDFLAGS=-lm
 UNIT_CFLAGS=$(CFLAGS) -Iunit/
 FUNC_CFLAGS=$(CFLAGS) -Ifunctional/
