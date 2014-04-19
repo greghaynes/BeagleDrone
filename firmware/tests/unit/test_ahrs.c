@@ -1,5 +1,5 @@
 #include "tests/test_help.h"
-#include "app/state.h"
+#include "app/ahrs.h"
 
 #include <stdio.h>
 #include <assert.h>
@@ -11,13 +11,13 @@ void QuaternionPrint(const Quaternion *q, const char *label) {
            eulers.c);
 }
 
-void StateErrorPrint(const State *state) {
+void AhrsErrorPrint(const AhrsState *state) {
     QuaternionPrint(&state->error_p, "Error (P)");
     QuaternionPrint(&state->error_i, "Error (I)");
     QuaternionPrint(&state->error_d, "Error (D)");
 }
 
-void StatePrint(const State *state) {
+void AhrsPrint(const AhrsState *state) {
     const Quaternion *q = &state->r_b_to_i;
     printf("state:\t");
     printf("a: %f\tb: %f\tc: %f\td: %f\n",
@@ -29,17 +29,17 @@ void StatePrint(const State *state) {
 }
 
 void test_single_axis_basic_rot_angvel_update(void) {
-    State s;
-    StateInit(&s);
-    StatePrint(&s);
+    AhrsState s;
+    AhrsInit(&s);
+    AhrsPrint(&s);
 
     int i;
-    StateRotationalFloat ang_vel = { 1, 0, 0 };
+    AhrsRotationalFloat ang_vel = { 1, 0, 0 };
     for(i = 0;i < 100;i++) {
-        StateUpdateRotFromAngVel(&s, &ang_vel, .001);
+        AhrsUpdateRotFromAngVel(&s, &ang_vel, .001);
     }
 
-    StatePrint(&s);
+    AhrsPrint(&s);
     Vector3F eulers;
     QuaternionToEulers(&s.r_b_to_i, &eulers);
     assert(NearEqual(eulers.a, 0.1, 0.001));
@@ -48,17 +48,17 @@ void test_single_axis_basic_rot_angvel_update(void) {
 }
 
 void test_single_axis_large_rot_angvel_update(void) {
-    State s;
-    StateInit(&s);
-    StatePrint(&s);
+    AhrsState s;
+    AhrsInit(&s);
+    AhrsPrint(&s);
 
     int i;
-    StateRotationalFloat ang_vel = { 1, 0, 0 };
+    AhrsRotationalFloat ang_vel = { 1, 0, 0 };
     for(i = 0;i < 3160;i++) {
-        StateUpdateRotFromAngVel(&s, &ang_vel, .001);
+        AhrsUpdateRotFromAngVel(&s, &ang_vel, .001);
     }
 
-    StatePrint(&s);
+    AhrsPrint(&s);
     Vector3F eulers;
     QuaternionToEulers(&s.r_b_to_i, &eulers);
     assert(NearEqual(eulers.a, -3.12, 0.1));
@@ -67,29 +67,29 @@ void test_single_axis_large_rot_angvel_update(void) {
 }
 
 void test_multi_axis_basic_rot_angvel_update(void) {
-    State s;
-    StateInit(&s);
-    StatePrint(&s);
+    AhrsState s;
+    AhrsInit(&s);
+    AhrsPrint(&s);
 
     int i;
-    StateRotationalFloat ang_vel = { 1, 1, 0 };
+    AhrsRotationalFloat ang_vel = { 1, 1, 0 };
     for(i = 0;i < 3160;i++) {
-        StateUpdateRotFromAngVel(&s, &ang_vel, .001);
+        AhrsUpdateRotFromAngVel(&s, &ang_vel, .001);
     }
 
-    StatePrint(&s);
+    AhrsPrint(&s);
     //TODO:GAH what vals do we expect?
 }
 
 void test_error_update(void) {
-    State s;
+    AhrsState s;
     Quaternion error;
     Vector3F eulers = {.001, 0, 0};
-    StateInit(&s);
+    AhrsInit(&s);
     QuaternionFromEulers(&eulers, &error);
 
-    StateUpdateError(&s, &error, .001);
-    StateErrorPrint(&s);
+    AhrsUpdateError(&s, &error, .001);
+    AhrsErrorPrint(&s);
     QuaternionToEulers(&s.error_p, &eulers);
     assert(NearEqual(eulers.a, 0.001, .0001));
     QuaternionToEulers(&s.error_i, &eulers);
@@ -97,14 +97,14 @@ void test_error_update(void) {
     QuaternionToEulers(&s.error_d, &eulers);
     assert(NearEqual(eulers.a, 1, 0.1));
 
-    StateUpdateError(&s, &error, .001);
+    AhrsUpdateError(&s, &error, .001);
     QuaternionToEulers(&s.error_p, &eulers);
     assert(NearEqual(eulers.a, 0.001, .0001));
     QuaternionToEulers(&s.error_i, &eulers);
     assert(NearEqual(eulers.a, 0.002, .0001));
     QuaternionToEulers(&s.error_d, &eulers);
     assert(NearEqual(eulers.a, 0, 0.001));
-    StateErrorPrint(&s);
+    AhrsErrorPrint(&s);
 }
 
 int main(int argc, char **argv) {

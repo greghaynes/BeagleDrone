@@ -1,52 +1,52 @@
-#ifndef STATE_H
-#define STATE_H
+#ifndef AHRS_H
+#define AHRS_H
 
 #include "quaternion.h"
 
-typedef struct StateRotationalFloat {
+typedef struct AhrsRotationalFloat {
     float roll;
     float pitch;
     float yaw;
-} StateRotationalFloat;
+} AhrsRotationalFloat;
 
-typedef struct StateRotationalShort {
+typedef struct AhrsRotationalShort {
     short roll;
     short pitch;
     short yaw;
-} StateRotationalShort;
+} AhrsRotationalShort;
 
-typedef struct State {
+typedef struct AhrsState {
     Quaternion r_b_to_i;
 
     Quaternion setpoint;
     Quaternion error_p;
     Quaternion error_i;
     Quaternion error_d;
-} State;
+} AhrsState;
 
-void StateSetSetpoint(State *state,
+void AhrsSetSetpoint(AhrsState *state,
                       const Vector3F *eulers);
 
-void StateUpdateError(State *state,
+void AhrsUpdateError(AhrsState *state,
                       const Quaternion *error,
                       float time_delta);
 
 /* Updates the rotational state given an angular velocity and time. */
-void StateUpdateRotFromAngVel(State *state,
-                              const StateRotationalFloat *ang_vel,
+void AhrsUpdateRotFromAngVel(AhrsState *state,
+                              const AhrsRotationalFloat *ang_vel,
                               float time_delta);
 
 /* Equivilent to calling these functions, in this order:
- *  StateUpdateRotFromAngVel
- *  StateUpdateError
+ *  AhrsUpdateRotFromAngVel
+ *  AhrsUpdateError
  *
  *  This is useful for testing but typically the error and motors are not
  *  updated at the same rate as rotational state.
  */
-void StateUpdateFromAngVel(State *state,
-                           const StateRotationalFloat *ang_vel,
+void AhrsUpdateFromAngVel(AhrsState *state,
+                           const AhrsRotationalFloat *ang_vel,
                            float time_delta);
 
-void StateInit(State *s);
+void AhrsInit(AhrsState *s);
 
 #endif

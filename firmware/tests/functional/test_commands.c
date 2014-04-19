@@ -1,15 +1,15 @@
+#include "app/ahrs.h"
 #include "app/communication.h"
-#include "app/state.h"
 #include "tests/test_help.h"
 #include "tests/mock/uart_driver.h"
 
 void test_commands_tun_on(void) {
     UartMockDriverState uart;
-    State s;
+    AhrsState s;
     CommunicationState com;
 
     UartMockDriverStateInit(&uart);
-    StateInit(&s);
+    AhrsInit(&s);
     CommunicationInit(&com);
 }
 

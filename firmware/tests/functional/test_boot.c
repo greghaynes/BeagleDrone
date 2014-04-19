@@ -1,6 +1,6 @@
 #include "app/afproto.h"
+#include "app/ahrs.h"
 #include "app/communication.h"
-#include "app/state.h"
 #include "tests/test_help.h"
 #include "tests/mock/uart_driver.h"
 

@@ -1,12 +1,12 @@
+#include "ahrs.h"
 #include "mathhelp.h"
-#include "state.h"
 
-void StateSetSetpoint(State *state,
+void AhrsSetSetpoint(AhrsState *state,
                       const Vector3F *eulers) {
     QuaternionFromEulers(eulers, &state->setpoint);
 }
 
-void StateUpdateError(State *state,
+void AhrsUpdateError(AhrsState *state,
                       const Quaternion *error,
                       float time_delta) {
     Quaternion tmp, err_delta, q_dt;
@@ -25,8 +25,8 @@ void StateUpdateError(State *state,
     QuaternionMultiply(&q_dt, &state->error_i, &state->error_i);
 }
 
-void StateUpdateRotFromAngVel(State *state,
-                              const StateRotationalFloat *ang_vel,
+void AhrsUpdateRotFromAngVel(AhrsState *state,
+                              const AhrsRotationalFloat *ang_vel,
                               float time_delta) {
     Quaternion *rot_quat = &state->r_b_to_i;
 
@@ -46,16 +46,16 @@ void StateUpdateRotFromAngVel(State *state,
 }
 
 /*! \brief Update state from angular velocity */
-void StateUpdateFromAngVel(State *state,
-                           const StateRotationalFloat *ang_vel,
+void AhrsUpdateFromAngVel(AhrsState *state,
+                           const AhrsRotationalFloat *ang_vel,
                            float time_delta) {
     Quaternion error;
-    StateUpdateRotFromAngVel(state, ang_vel, time_delta);
+    AhrsUpdateRotFromAngVel(state, ang_vel, time_delta);
     QuaternionDifference(&state->r_b_to_i, &state->setpoint, &error);
-    StateUpdateError(state, &error, time_delta);
+    AhrsUpdateError(state, &error, time_delta);
 }
 
-void StateInit(State *s) {
+void AhrsInit(AhrsState *s) {
     QuaternionZero(&s->r_b_to_i);
     QuaternionZero(&s->setpoint);
     QuaternionZero(&s->error_p);
