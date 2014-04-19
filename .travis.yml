@@ -4,5 +4,8 @@ compiler:
   - clang
 notifications:
   irc:
-    - "chat.freenode.net#beagledrone"
+    channels:
+      - "chat.freenode.net#beagledrone"
+    template:
+      - "(%{branch} - %{commit} : %{author}): %{message}"
 script: cd firmware/tests && make
