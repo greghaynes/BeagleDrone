@@ -6,11 +6,13 @@
 #include "app/imusensors.h"
 
 int main() {
+    CommunicationState commState;
+
     // Setup sysdelay timer
     SysDelayTimerSetup();
 
     // Initialize communication
-    CommunicationInit();
+    CommunicationInit(&commState);
 
     // Enable master IRQ
     IntMasterIRQEnable();

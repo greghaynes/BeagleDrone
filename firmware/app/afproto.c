@@ -49,7 +49,8 @@ int afproto_ringbuffer_pop_frame(RingBuffer *input, Buffer *output) {
         BufferClear(output);
     else {
         unsigned short crc = crc16_buff(output->data, in_iter_cnt - 2);
-        if(crc != *(unsigned short*)prev_chars)
+        unsigned short *crc_check = (unsigned short*)prev_chars;
+        if(crc != *crc_check)
             BufferClear(output);
     }
     return !RingBufferIsEmpty(input);
