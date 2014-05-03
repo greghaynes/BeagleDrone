@@ -21,6 +21,7 @@ OBJS=kernel/boot/startup.o\
 	kernel/cpu.o\
 	kernel/interrupt.o\
 	kernel/sysdelay.o\
+	glue/motors.o\
 	app/afproto.o\
 	app/commands/nav.o\
 	app/crc16.o\
@@ -29,7 +30,6 @@ OBJS=kernel/boot/startup.o\
 	app/command.o\
 	app/control.o\
 	app/log.o\
-	app/motorcontrol.o\
 	app/motorhelp.o\
 	app/imusensors.o\
 	app/state.o\

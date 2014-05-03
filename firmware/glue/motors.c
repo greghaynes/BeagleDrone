@@ -1,4 +1,4 @@
-#include "motorcontrol.h"
+#include "glue/motors.h"
 #include "kernel/hw/soc_AM335x.h"
 #include "kernel/platform/beaglebone/pwmss.h"
 #include "kernel/drivers/ehrpwm.h"
@@ -6,7 +6,7 @@
 #define CLOCK_DIV_VAL                 (10)
 #define SOC_EHRPWM_2_MODULE_FREQ      (100000000)
 
-void MotorControlInit(void) {
+void MotorsInit(void) {
     PWMSSModuleClkConfig(2);
     EPWM2PinMuxSetup(4);
     PWMSSTBClkEnable(2);
