@@ -24,6 +24,7 @@ OBJS=kernel/boot/startup.o\
 	glue/communication.o\
 	glue/motors.o\
 	app/afproto.o\
+	app/ahrs.o\
 	app/commands/nav.o\
 	app/crc16.o\
 	app/buffer.o\
@@ -33,7 +34,6 @@ OBJS=kernel/boot/startup.o\
 	app/log.o\
 	app/motorhelp.o\
 	app/imusensors.o\
-	app/state.o\
 	app/quaternion.o\
 	app/mathhelp.o\
 	app/main.o

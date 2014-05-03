@@ -1,9 +1,7 @@
-#include "kernel/interrupt.h"
-#include "kernel/sysdelay.h"
 #include "app/communication.h"
 #include "app/log.h"
-#include "app/motorcontrol.h"
 #include "app/imusensors.h"
+#include "glue/motors.h"
 
 int main() {
     CommunicationState commState;
@@ -28,7 +26,6 @@ int main() {
 
     while(1) {
         LogCString(LOG_LEVEL_ERROR, "LogMessage\r\n");
-        Sysdelay(1000);
     }
     return 0;
 }

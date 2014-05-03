@@ -15,7 +15,7 @@ static MotorState d_gains[3] = {
     { 0, 0, 0, 0 },
     { 0, 0, 0, 0 } };
 
-void ControlUpdateMotorState(State *state, MotorState *motors) {
+void ControlUpdateMotorState(AhrsState *state, MotorState *motors) {
     // P
     MotorState p_state;
     Vector3F eulers;
