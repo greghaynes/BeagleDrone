@@ -2,9 +2,9 @@
 #define CONTROL_H
 
 #include "motorhelp.h"
-#include "state.h"
+#include "ahrs.h"
 
-void ControlUpdateMotorState(State *state, MotorState *motors);
+void ControlUpdateMotorState(AhrsState *state, MotorState *motors);
 
 #endif
 

@@ -8,8 +8,8 @@
 #define GYRO_I2C_WRITE_ADDR 0xD0
 #define GYRO_I2C_READ_ADDR 0xD1
 
-static StateRotationalShort sensor_gyro;
-static StateRotationalShort sensor_accelero;
+static AhrsRotationalShort sensor_gyro;
+static AhrsRotationalShort sensor_accelero;
 
 #define GYRO_SENSOR_ID 0
 #define ACCELERO_SENSOR_ID 1
@@ -134,11 +134,11 @@ void IMUSensorsInit(void) {
     SetupI2C();
 }
 
-const StateRotationalShort *IMUSensorsGetGyro(void) {
+const AhrsRotationalShort *IMUSensorsGetGyro(void) {
     return &sensor_gyro;
 }
 
-const StateRotationalShort *IMUSensorsGetAccelero(void) {
+const AhrsRotationalShort *IMUSensorsGetAccelero(void) {
     return &sensor_accelero;
 }
 
