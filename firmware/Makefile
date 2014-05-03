@@ -21,6 +21,7 @@ OBJS=kernel/boot/startup.o\
 	kernel/cpu.o\
 	kernel/interrupt.o\
 	kernel/sysdelay.o\
+	glue/communication.o\
 	glue/motors.o\
 	app/afproto.o\
 	app/commands/nav.o\
