@@ -29,39 +29,31 @@ void LogCString(unsigned char level, const char *message) {
     printf("LOG - Level: %d. Msg: %s\n", level, message);
 }
 
-int UartGetCharNonBlocking(unsigned int baseAdd, char *data) {
-    return RingBufferPop(&state.in_buff, data);
+void CommunicationHwInit(void) {
 }
 
-unsigned int UARTCharPutNonBlocking(unsigned int baseAdd,
-                                    unsigned char byteWrite) {
+void CommunicationIntRegisterHandler(void (*isr)(void)) {
+    state.int_handler = isr;
+}
+
+int CommunicationTryGetChar(unsigned char *data) {
+    return (int)RingBufferPop(&state.in_buff, (char*)data);
+}
+
+unsigned int CommunicationTrySendChar(unsigned int baseAdd,
+                                      unsigned char byteWrite) {
     return 1;
 }
 
-static unsigned int int_enable_base_add;
-static unsigned int int_enable_int_flag;
-void UARTIntEnable(unsigned int baseAdd, unsigned int intFlag) {
-    int_enable_base_add = baseAdd;
-    int_enable_int_flag = intFlag;
+void CommunicationIntEnableRead(void) {
 }
 
-static unsigned int int_disable_base_add;
-static unsigned int int_disable_int_flag;
-void UARTIntDisable(unsigned int baseAdd, unsigned int intFlag) {
-    int_disable_base_add = baseAdd;
-    int_disable_int_flag = intFlag;
+void CommunicationIntDisableWrite(void) {
 }
 
-static unsigned int init_base_add;
-static unsigned int init_baud_rate;
-void UartInit(unsigned int baseAdd, unsigned int baudRate) {
-    init_base_add = baseAdd;
-    init_baud_rate = baudRate;
+void CommunicationIntEnableWrite(void) {
 }
 
-void UartSetInterruptHandler(unsigned int baseAdd, void (*fnHandler)(void)) {
-    state.int_handler = fnHandler;
-}
 
 static const char *command_handle_raw_last_data;
 static unsigned int command_handle_raw_last_size;
@@ -76,8 +68,8 @@ void test_communication_init(void) {
     state_zero();
     CommunicationState s;
     CommunicationInit(&s);
+
     assert(state.int_handler);
-    state.int_handler();
 }
 
 void test_communication_receive(void) {
