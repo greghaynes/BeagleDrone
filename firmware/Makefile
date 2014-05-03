@@ -36,7 +36,7 @@ OBJS=kernel/boot/startup.o\
 	app/imusensors.o\
 	app/quaternion.o\
 	app/mathhelp.o\
-	app/main.o
+	main.o
 
 all: boot.bin
 
